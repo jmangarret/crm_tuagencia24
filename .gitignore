@@ -1,6 +1,34 @@
+##vTigerCRM
+config.inc.php
+config.performance.php
+log4php.properties
+##Modo 2
+/config.inc.php
+/config.performance.php
+/log4php.properties
+
+##Directorios
+test/
+user_privileges/
+storage/
+cache/
+backup/
+ayuda/
+##Directorios Modo 2
+logs/
+/test/
+/user_privileges/
+/storage/
+/cache/
+/logs/
+/backup/
+/ayuda/
+
 ## SugarCRM
 # Ignore custom .htaccess stuff.
 /.htaccess
+/htaccess.txt
+htaccess.txt
 # Ignore the cache directory completely.
 # This will break the current behaviour. Which was often leading to
 # the misuse of the repository as backup replacement.
