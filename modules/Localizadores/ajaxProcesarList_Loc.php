@@ -13,7 +13,6 @@ $cont=0;
 if ($accion=="procesarLocalizadores"){		
 	if (isset($id))
 	foreach ($id as $idLoc) {		
-
 		$resultado = mysql_query("SELECT registrodeventasid FROM vtiger_localizadores WHERE localizadoresid = ".$idLoc);
 		$registro = mysql_fetch_assoc($resultado);
 		if (!isset($registro["registrodeventasid"])){
@@ -66,7 +65,7 @@ if ($accion=="procesarLocalizadores"){
 		$qryReg2=mysql_query($sqlReg2);
 
 		$idRecordSig=($idRecord+1);
-		$sqlEnt="UPDATE vtiger_modentity_num SET cur_id=CONCAT('0',$idRecordSig) WHERE cur_id='$idRecord' AND active=1 AND semodule='RegistroDeVentas'";
+		$sqlEnt="UPDATE   SET cur_id=CONCAT('0',$idRecordSig) WHERE cur_id='$idRecord' AND active=1 AND semodule='RegistroDeVentas'";
 		$qryEnt=mysql_query($sqlEnt);
 		/// FIN CREACION DEL REGISTO DE VENTAS///
 
@@ -94,11 +93,11 @@ if ($accion=="procesarLocalizadores"){
 		$link= "<a href='index.php?module=Localizadores&view=List'>Actualizar Lista</a>";		
 		echo "Se han procesado TODOS LOS BOLETOS asociados de los LOCALIZADORES seleccionados. $link";
 	}
-		if ($cont>0 && $sin_contactos>0){	//Mensaje a medias, exitos y fallos
+	if ($cont>0 && $sin_contactos>0){	//Mensaje a medias, exitos y fallos
 		$link= "<a href='index.php?module=Localizadores&view=List'>Actualizar Lista</a>";
 		echo "Hubo un total de ".$sin_contactos." boleto(s) que no se procesaron. No hay Contacto asociado.";
 	}
-		if ($cont==0 && $sin_contactos>0) { //Fallaron todos
+	if ($cont==0 && $sin_contactos>0) { //Fallaron todos
 		echo "No se procesó ningún localizador por falta de contactos.";
 	}
 }
