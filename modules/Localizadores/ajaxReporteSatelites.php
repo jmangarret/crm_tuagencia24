@@ -63,7 +63,7 @@ if ($_REQUEST["proc"])	$p = "1";
 if (!$_REQUEST["proc"])	$p = "0";
 
 if ($_REQUEST["satelite"]!=""){
-	$query="SELECT loc.localizadoresid,loc.localizador, con.contactid, con.firstname, con.lastname, loc.paymentmethod, loc.registrodeventasid, loc.procesado, loc.gds, bol.monto_base, bol.fecha_emision, bol.boleto1, bol.status
+	$query="SELECT loc.localizadoresid,loc.localizador, con.contactid, con.firstname, con.lastname, loc.paymentmethod, loc.registrodeventasid, loc.procesado, loc.gds, bol.amount, bol.fecha_emision, bol.boleto1, bol.status
 	FROM vtiger_account AS acc 
 	INNER JOIN vtiger_contactdetails AS con ON acc.accountid=con.accountid 
 	INNER JOIN vtiger_localizadores AS loc ON loc.contactoid=con.contactid 
@@ -82,7 +82,7 @@ if ($_REQUEST["satelite"]!=""){
 	$query.=" ORDER BY loc.gds, bol.fecha_emision ASC ";
 }else{
 	$else = 1;
-	$query="SELECT loc.localizadoresid,loc.localizador, loc.contactoid, loc.paymentmethod, loc.registrodeventasid, loc.procesado, loc.gds, bol.monto_base, bol.fecha_emision, bol.boleto1, bol.status
+	$query="SELECT loc.localizadoresid,loc.localizador, loc.contactoid, loc.paymentmethod, loc.registrodeventasid, loc.procesado, loc.gds, bol.amount, bol.fecha_emision, bol.boleto1, bol.status
 	FROM vtiger_localizadores AS loc 
 	INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 	WHERE procesado=".$_REQUEST['proc'];
@@ -122,7 +122,7 @@ if ($_REQUEST["satelite"]!=""){
 			<th nowrap  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="procesado">Procesado&nbsp;&nbsp;</a></th>
 			<th nowrap  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="gds">Sistema GDS&nbsp;&nbsp;</a></th>
 			<th nowrap  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="status">Estatus&nbsp;&nbsp;</a></th>
-			<th nowrap  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="monto_base">Tarifa&nbsp;&nbsp;</a></th>
+			<th nowrap  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="amount">Tarifa&nbsp;&nbsp;</a></th>
 			<th nowrap  colspan="2"  class="wide"><a href="javascript:void(0);" class="listViewHeaderValues" data-nextsortorderval="ASC" data-columnname="registrodeventasid">Registro de Venta&nbsp;&nbsp;</a></th>
 
 		</tr>
@@ -172,7 +172,7 @@ if($filtro = mysql_query($query))
 		<td class="listViewEntryValue wide" data-field-type="boolean" data-field-name="procesado" nowrap><?=($row["procesado"] == "0") ?  "No" : "Si"?></td>
 		<td class="listViewEntryValue wide" data-field-type="picklist" data-field-name="gds" nowrap><?=$row["gds"]?></td>
 		<td class="listViewEntryValue wide" data-field-type="picklist" data-field-name="status" nowrap><?=$row["status"]?></td>
-		<td class="listViewEntryValue wide" data-field-type="double" data-field-name="monto_base" nowrap><span align='right'><?=$row["monto_base"]?></div></td>
+		<td class="listViewEntryValue wide" data-field-type="double" data-field-name="amount" nowrap><span align='right'><?=$row["amount"]?></div></td>
 		<td class="listViewEntryValue wide" data-field-type="reference" data-field-name="registrodeventasid" nowrap>
 			<a href='?module=RegistroDeVentas&view=Detail&record=<?=$row["registrodeventasid"]?>' title='Registro De Ventas'><?=$registro_de_venta["registrodeventasname"]?></a></td>
 		<td nowrap class="wide">
