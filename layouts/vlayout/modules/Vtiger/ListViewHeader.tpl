@@ -185,36 +185,42 @@
 					<td class="fieldLabel wide">
 						<span> Localizador: </span><br>
 						<input type="text" name="text-localizador" id="text-localizador">
-						</td><td class="fieldLabel wide">
+					</td>
+					<td class="fieldLabel wide">
 						<span> Nº de Boleto: </span><br>
 						<input type="text" name="text-boleto" id="text-boleto">
-						</td><td class="fieldLabel wide">
+					</td>
+					<td class="fieldLabel wide">
 						<span> Estatus: </span><br>
 						<select class="option-estatus" id="option-estatus">
 							<option value="">--Seleccione--</option>
-						</select></td><td class="fieldLabel wide">
+						</select>
+					</td>
+					<td class="fieldLabel wide">
 						<span> Satelite: </span><br>
 						<select class="chzn-single" id="chzn-single">
 							<option value="">--Seleccione--</option>
-						</select></td><td class="fieldLabel wide">
+						</select>
+					</td>
+				</tr><tr>
+					<td class="fieldLabel wide">
 						<span> Desde: </span><br>
 						<input type="date" class="dateField" value="" data-date-format="dd-mm-yyyy" name="fechaemision1" id="fechaemision1"></td><td class="fieldLabel wide">
-						<!--<span class="add-on">
-						    <i class="icon-calendar"></i>
-						</span>-->
 						<span> Hasta: </span><br>
-						<input type="date" class="dateField" value="" data-date-format="dd-mm-yyyy" name="fechaemision2" id="fechaemision2"></td></tr><tr><td class="fieldLabel wide">
-						<!--<span class="add-on">
-						    <i class="icon-calendar"></i>
-						</span>-->
-
+						<input type="date" class="dateField" value="" data-date-format="dd-mm-yyyy" name="fechaemision2" id="fechaemision2">
+					</td>
+						
+					<td class="fieldLabel wide">
 						<span> GDS: </span><br>
 						<select class="gds-select" id="gds-select">
 							<option value="">--Seleccione--</option>
-						</select></td><td class="fieldLabel wide">
+						</select>
+					</td>
+					<td class="fieldLabel wide">
 						<span> Procesados: </span>
-						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> </td><td class="fieldLabel wide">
-
+						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> 
+					</td>
+					<td class="fieldLabel wide">
 						<a href="javascript:void(0);">
 						<button id="{$MODULE}_listView_basicAction_Buscar" class="btn">								
 						<strong>Buscar</strong> 

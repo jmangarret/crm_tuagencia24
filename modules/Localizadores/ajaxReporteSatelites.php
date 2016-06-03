@@ -79,7 +79,7 @@ if ($_REQUEST["satelite"]!=""){
 		$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
 	if ($_REQUEST["estatus"])
 		$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
-	$query.=" ORDER BY loc.gds, bol.fecha_emision ASC ";
+	$query.=" ORDER BY bol.fecha_emision DESC ";
 }else{
 	$else = 1;
 	$query="SELECT loc.localizadoresid,loc.localizador, loc.contactoid, loc.paymentmethod, loc.registrodeventasid, loc.procesado, loc.gds, bol.amount, bol.fecha_emision, bol.boleto1, bol.status
@@ -96,7 +96,7 @@ if ($_REQUEST["satelite"]!=""){
 		$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
 	if ($_REQUEST["estatus"])
 		$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
-	$query.=" ORDER BY loc.gds, bol.fecha_emision ASC ";
+	$query.=" ORDER BY bol.fecha_emision DESC ";
 }
 
 
@@ -172,7 +172,7 @@ if($filtro = mysql_query($query))
 		<td class="listViewEntryValue wide" data-field-type="boolean" data-field-name="procesado" nowrap><?=($row["procesado"] == "0") ?  "No" : "Si"?></td>
 		<td class="listViewEntryValue wide" data-field-type="picklist" data-field-name="gds" nowrap><?=$row["gds"]?></td>
 		<td class="listViewEntryValue wide" data-field-type="picklist" data-field-name="status" nowrap><?=$row["status"]?></td>
-		<td class="listViewEntryValue wide" data-field-type="double" data-field-name="amount" nowrap><span align='right'><?=$row["amount"]?></div></td>
+		<td class="listViewEntryValue wide" data-field-type="currency" data-field-name="amount" nowrap><?=number_format($row["amount"], 2, '.', ',');?></td>
 		<td class="listViewEntryValue wide" data-field-type="reference" data-field-name="registrodeventasid" nowrap>
 			<a href='?module=RegistroDeVentas&view=Detail&record=<?=$row["registrodeventasid"]?>' title='Registro De Ventas'><?=$registro_de_venta["registrodeventasname"]?></a></td>
 		<td nowrap class="wide">

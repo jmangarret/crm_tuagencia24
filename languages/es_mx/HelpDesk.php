@@ -10,7 +10,7 @@
 $languageStrings = array(
 	'HelpDesk'                     => 'Casos'                       , 
 	'SINGLE_HelpDesk'              => 'Caso'                        , 
-	'LBL_ADD_RECORD'               => 'Agregar Ticket'              , 
+	'LBL_ADD_RECORD'               => 'Agregar Caso'              , 
 	'LBL_RECORDS_LIST'             => 'Lista de casos'              , 
 	'LBL_TICKET_INFORMATION'       => 'Información del Caso'       , 
 	'LBL_TICKET_RESOLUTION'        => 'Solución Propuesta'         , 

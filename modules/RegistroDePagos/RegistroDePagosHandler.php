@@ -7,15 +7,16 @@ class RegistroDePagosHandler extends VTEventHandler {
         if ($moduleName == 'RegistroDePagos') {  
         	if ($eventName == 'vtiger.entity.aftersave' || $eventName == 'vtiger.entity.afterdelete') {          
 				// Get the account name		
-				$idVenta = $entityData->get('registrodeventasid');
-				$idp=$entityData->getId(); //OBTIENE ID DEL PAGO
-				$idpago=$_REQUEST["record"];
+				//$idVenta = $entityData->get('registrodeventasid');
+				//$idp=$entityData->getId(); //OBTIENE ID DEL PAGO
+				//$idpago=$_REQUEST["record"];
 				//$this->updatePagos($idpago,$idVenta,NULL);
         	}
     	}
     	return true;
     }
     function updatePagos($idpago, $idVenta, $action=""){
+    	/* MIGRADO A SP TOTVENTASPAGADAS
 		global $log, $current_module, $adb, $current_user;
 		$log->debug("Entering handle update pagos");
         if ($action=="DELETE"){
@@ -79,6 +80,7 @@ class RegistroDePagosHandler extends VTEventHandler {
 		}
 		}	
 		return true;
+		*/
     }
 }
 

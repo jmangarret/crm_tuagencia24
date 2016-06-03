@@ -27,12 +27,13 @@ class RegistroDeVentasHandler extends VTEventHandler {
 				$row = $adb->fetch_row($result);
 				$nrows=$row[0];
         	}
-        $this->updateVentas($id);
+        	$this->updateVentas($id);
         }
     }
     function updateVentas($idVenta){
     		global $log, $current_module, $adb, $current_user;	
 			//BUSCAMOS BOLETOS ASOCIADOS PARA EJECUTAR HANDLER
+			/*
 			$sql="SELECT COUNT(*) FROM vtiger_boletos WHERE registrodeventasid = ?";
 			$result = $adb->pquery($sql, array($idVenta));	
 			$row = $adb->fetch_row($result);
@@ -52,7 +53,7 @@ class RegistroDeVentasHandler extends VTEventHandler {
 					$log->debug("Entering handle totalboletos ". $totalBoletosBs);
 	
 			}
-
+			*/
 			//BUSCAMOS PRODUCTS ASOCIADOS PARA EJECUTAR HANDLER
 			$sql="SELECT COUNT(*) FROM vtiger_ventadeproductos WHERE registrodeventasid = ?";
 			$result = $adb->pquery($sql, array($idVenta));	
@@ -73,18 +74,22 @@ class RegistroDeVentasHandler extends VTEventHandler {
 				$log->debug("Entering handle totalproductos ". $totalProductosBs);
 
 			}
-
+			/*
 			$totalBs=$totalBoletosBs+$totalProductosBs;
 			$totalDs=$totalBoletosDolares+$totalProductosDolares;
 			$log->debug("Entering handle totalboletosproductos ".$totalBoletosBs." - ".$totalProductosBs);
+			*/
+			$sql="UPDATE vtiger_registrodeventas SET totalventabs=totalventabs+?, totalventadolares=totalventadolares+? WHERE registrodeventasid = ?";
+			$result = $adb->pquery($sql, array($totalProductosBs, $totalProductosDolares,  $idVenta));	
+			//$result = $adb->pquery($sql, array($totalBs, $totalDs, $totalBs, $totalDs, $idVenta));	query anterior may2016
 
-			$sql="UPDATE vtiger_registrodeventas SET totalventabs=?, totalventadolares=?, totalpendientebs=?, totalpendientedolares=? WHERE registrodeventasid = ?";
-			$result = $adb->pquery($sql, array($totalBs, $totalDs, $totalBs, $totalDs, $idVenta));	
+			//if ($nprods>0 || $nbols>0){
+			//	RegistroDePagosHandler::updatePagos(0,$idVenta);				
+			//}			
+			
+			$result = $adb->pquery("CALL totVentasPagadas(?)", array($idVenta));	
 
-			if ($nprods>0 || $nbols>0){
-				RegistroDePagosHandler::updatePagos(0,$idVenta);
-			}			
-        	$log->debug("Entering handle event VentasNew ".$idVenta);
+        	
 			
 	}	
 }
