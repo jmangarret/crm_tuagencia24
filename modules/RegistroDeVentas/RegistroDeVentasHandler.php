@@ -61,13 +61,13 @@ class RegistroDeVentasHandler extends VTEventHandler {
 			$nprods=$row[0];
 			if ($nprods>0){								
 				//MONTO TOTAL EN DOLARES BOLETOS SOTOS
-				$sql="SELECT SUM(amount) as montoDs FROM vtiger_ventadeproductos WHERE currency='USD' AND registrodeventasid = ?";
+				$sql="SELECT IF(ISNULL(SUM(amount)),0,SUM(amount)) AS montoDs FROM vtiger_ventadeproductos WHERE currency='USD' AND registrodeventasid = ?";
 				$result = $adb->pquery($sql, array($idVenta));	
 				$row = $adb->fetch_row($result);
 				$totalProductosDolares=$row[0];
 				
 				//MONTO TOTAL EN BS BOLETOS NO SOTOS
-				$sql="SELECT SUM(amount) as montoBs FROM vtiger_ventadeproductos WHERE currency='VEF' AND registrodeventasid = ?";
+				$sql="SELECT IF(ISNULL(SUM(amount)),0,SUM(amount)) as montoBs FROM vtiger_ventadeproductos WHERE currency='VEF' AND registrodeventasid = ?";
 				$result = $adb->pquery($sql, array($idVenta));	
 				$row = $adb->fetch_row($result);
 				$totalProductosBs=$row[0];	
