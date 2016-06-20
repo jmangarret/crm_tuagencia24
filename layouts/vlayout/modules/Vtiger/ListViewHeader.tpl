@@ -77,9 +77,19 @@
 								data: ajax_data1,
 								url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
 								type: 'get',
-								success: function(response){														
-									if (response!='')
-									bootbox.alert(response);
+								success: function(response){									
+									if (response=="Completado"){
+										bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
+										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
+									}
+									if (response=="Incompleto"){
+										bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
+										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
+									}
+									if (response=="Fallido"){
+										bootbox.alert("No se procesó ningún localizador por falta de contactos."); 										
+										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
+									}									
 								}
 							});
 					    });	
