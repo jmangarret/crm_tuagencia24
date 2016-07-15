@@ -16,6 +16,7 @@
  *  Author       : JPL TSolucio, S. L. Joe Bordes
  ************************************************************************************/
 $languageStrings = array(
+	'LBL_AGENCIA' => 'AGENCIA',//MENU AGENCIA
 	'APPTITLE'                     => 'vtiger CRM',
 	'POWEREDBY'                    => 'Powered by vtiger CRM',
 	'LBL_READ_LICENSE'             => 'Leer Licencia',

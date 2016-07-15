@@ -990,12 +990,14 @@ class Vtiger_Field_Model extends Vtiger_Field {
      * @return <Boolean>
      */
     public function getPermissions($accessmode = 'readonly') {
+    	global $log;
+    	$log->debug("getPermissions");
         $user = Users_Record_Model::getCurrentUserModel();
         $privileges = $user->getPrivileges();
         if ($privileges->hasGlobalReadPermission()) {
             return true;
         } else {
-            $modulePermission = Vtiger_Cache::get('modulePermission-'.$accessmode, $this->getModuleId());
+            $modulePermission = Vtiger_Cache::get('modulePermission-'.$accessmode, $this->getModuleId());            
             if (!$modulePermission) {
                 $modulePermission = self::preFetchModuleFieldPermission($this->getModuleId(), $accessmode);
             }

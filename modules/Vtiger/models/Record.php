@@ -277,6 +277,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model {
 		}
 		//$log->debug("busqueda global getSearchResult... ".$query); 
 		//Modified by jmangarret 19/05/2015
+		/*
 		if ($module=="RegistroDeVentas" || $module=="Boletos" || $module=="VentaDeProductos"){
 			$query = $query ." UNION ALL " . 'select CONCAT(cf_1618, " ",registrodeventasname) as label, R2.registrodeventasid as crmid, "RegistroDeVentas" as setype, E.createdtime as createdtime ';
 			$query = $query . 'from vtiger_registrodeventas as R1, vtiger_registrodeventascf as R2, vtiger_crmentity as E ';
@@ -291,6 +292,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model {
 			
 			
 		}
+		*/
 
 		//$params = array_merge($params ,array("%$searchKey%","%$searchKey%"));
 		//Remove the ordering for now to improve the speed

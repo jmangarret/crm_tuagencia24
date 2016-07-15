@@ -173,10 +173,12 @@ class Vtiger_BasicAjax_View extends Vtiger_Basic_View {
 			
 			if($request->get('searchModule')) {
 				$searchModule = $request->get('searchModule');
-			}else{ //Modified by jmangarret 19/05/2015
+			}
+			/*
+			else{ //Modified by jmangarret 19/05/2015
 				$searchModule = $moduleName;
 			}
-			
+			*/
 			$viewer->assign('SEARCH_KEY', $searchKey);
 			$viewer->assign('SEARCH_MODULE', $searchModule);
 			$matchingRecords =  Vtiger_Record_Model::getSearchResult($searchKey, $searchModule);

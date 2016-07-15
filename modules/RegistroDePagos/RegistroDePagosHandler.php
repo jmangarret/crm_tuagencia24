@@ -5,9 +5,22 @@ class RegistroDePagosHandler extends VTEventHandler {
     	$log->debug("Entering handle event pagos ".$a);
         $moduleName = $entityData->getModuleName();
         if ($moduleName == 'RegistroDePagos') {  
-        	if ($eventName == 'vtiger.entity.aftersave' || $eventName == 'vtiger.entity.afterdelete') {          
-				// Get the account name		
-				//$idVenta = $entityData->get('registrodeventasid');
+        	if ($eventName == 'vtiger.entity.beforesave') {          				
+				$idVenta = $entityData->get('registrodeventasid');
+				$sqlValOrigen="SELECT registrodeventasid FROM vtiger_registrodeventas WHERE origendeventa>0 AND registrodeventasid= ?";
+				$result = $adb->pquery($sqlValOrigen, array($idVenta));	
+				$row = $adb->fetchByAssoc($result);
+				$valId=$row["registrodeventasid"];
+				if ($valId>0){
+					echo "<script>";
+					echo "alert('Debe modificar el Registro de Venta e Indicar el Origen de la misma para poder cargar pagos.')";
+					echo "history.back()";
+					echo "</script>";
+					$log->debug("Cancelando accion handle event before pagos ".$a);
+					return false;
+				}
+				//$qryValOrigen=mysql_query($sqlValOrigen);
+
 				//$idp=$entityData->getId(); //OBTIENE ID DEL PAGO
 				//$idpago=$_REQUEST["record"];
 				//$this->updatePagos($idpago,$idVenta,NULL);
