@@ -493,3 +493,6 @@ jQuery.Class("Vtiger_RelatedList_Js",{},{
 		Vtiger_Helper_Js.showHorizontalTopScrollBar();
 	}
 })
+
+
+

@@ -148,10 +148,32 @@
             {/foreach}
 
             {if $MODULE eq 'RegistroDeVentas'}
-            <tr style="color:white;background-color:RGB(0,101,166)">
-                <td><b>TOTAL GENERAL Bs:</b> {$TOTALBS} {$moduleName}</td>
-                <td><b>TOTAL GENERAL $:</b> {$TOTALDS} </td>
-            </tr>
+                <tr style="color:white;background-color:RGB(0,101,166)">
+                    <td><b>TOTAL GENERAL Bs:</b> {$TOTALBS} {$moduleName}</td>
+                    <td><b>TOTAL GENERAL $:</b> {$TOTALDS} </td>
+                </tr>
+                <script type="text/javascript">                                      
+                 $(document).ready(function() {                             
+                    if(window.location.href.indexOf('module=RegistroDeVentas&relatedModule=RegistroDePagos&view=Detail')!== -1) {
+                        var ids3 = new Array();     
+                        var ajax_data3 = {                                         
+                        "accion" : "valOrigen",                 
+                        "id" : {$PARENT_RECORD->getId()}               
+                        };      
+                        jQuery.ajax({
+                            data: ajax_data3,
+                            url: 'modules/RegistroDeVentas/ajaxValidarVentas.php',
+                            type: 'get',
+                            success: function(response){                                   
+                                if (response==0){
+                                    bootbox.alert("Debe Actualizar Origen de la Venta para Cargar Pagos...");                                     
+                                    setTimeout(function(){ window.location.assign("index.php?module=RegistroDeVentas&view=Detail&record={$PARENT_RECORD->getId()}"); }, 3000);
+                                }                            
+                            }
+                        });                                
+                    }                                        
+                });                     
+                </script>
             {/if}
 
         </table>

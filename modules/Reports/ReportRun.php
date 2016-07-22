@@ -3929,10 +3929,9 @@ class ReportRun extends CRMEntity
 				foreach($totalxls[0] as $key=>$value) {
 					$chdr=substr($key,-3,3);
 					$translated_str = in_array($chdr ,array_keys($mod_strings))?$mod_strings[$chdr]:$key;
-					$worksheet->setCellValueExplicitByColumnAndRow($count, $rowcount, $translated_str);
-
+					//jmangarret 22jul2016 ocultando encabezados de totales
+					//$worksheet->setCellValueExplicitByColumnAndRow($count, $rowcount, $translated_str);
 					$worksheet->getStyleByColumnAndRow($count, $rowcount)->applyFromArray($header_styles);
-
 					$count = $count + 1;
 				}
 			}
@@ -3940,10 +3939,15 @@ class ReportRun extends CRMEntity
 			$rowcount++;
 			foreach($totalxls as $key=>$array_value) {
 				$count = 0;
-				foreach($array_value as $hdr=>$value) {
+				
+				foreach($array_value as $hdr=>$value) {					
 					$value = decode_html($value);
-					$worksheet->setCellValueExplicitByColumnAndRow($count, $key+$rowcount, $value);
-					$count = $count + 1;
+					//$worksheet->setCellValueExplicitByColumnAndRow($count, $key+$rowcount, $value);
+					//jmangarret 22jul2016 mejora agregacion de columna de titulos a totales
+					$worksheet->setCellValueExplicitByColumnAndRow($count, $key+$rowcount, $hdr.": ");
+					$worksheet->setCellValueExplicitByColumnAndRow($count+1, $key+$rowcount, $value);					
+					//$count = $count + 1;
+					$count = $count + 3;
 				}
 			}
 		}

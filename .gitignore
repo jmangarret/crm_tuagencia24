@@ -2,52 +2,37 @@
 config.inc.php
 config.performance.php
 log4php.properties
+htaccess.txt
+
 ##Modo 2
-/config.inc.php
-/config.performance.php
-/log4php.properties
+##/config.inc.php
+##/config.performance.php
+##/log4php.properties
 
 ##Directorios
-test/
-user_privileges/
-storage/
-cache/
-backup/
-ayuda/
+test/*
+user_privileges/*
+storage/*
+cache/*
+backup/*
+ayuda/*
+logs/*
+
 ##Directorios Modo 2
-logs/
-/test/
-/user_privileges/
-/storage/
-/cache/
-/logs/
-/backup/
-/ayuda/
+##/test/
+##/user_privileges/
+##/storage/
+##/cache/
+##/logs/
+##/backup/
+##/ayuda/
 
 ## SugarCRM
 # Ignore custom .htaccess stuff.
-/.htaccess
-/htaccess.txt
-htaccess.txt
+##/.htaccess
+##/htaccess.txt
 # Ignore the cache directory completely.
 # This will break the current behaviour. Which was often leading to
 # the misuse of the repository as backup replacement.
 # For development the cache directory can be safely ignored and
 # therefore it is ignored.
-/cache/
-# Ignore some files and directories from the custom directory.
-/custom/history/
-/custom/modulebuilder/
-/custom/working/
-/custom/modules/*/Ext/
-/custom/application/Ext/
-# Custom configuration should also be ignored.
-/config.php
-/config_override.php
-# The silent upgrade scripts aren't needed.
-/silentUpgrade*.php
-# Logs files can safely be ignored.
-*.log
-# Ignore the new upload directories.
-/upload/
-/upload_backup/

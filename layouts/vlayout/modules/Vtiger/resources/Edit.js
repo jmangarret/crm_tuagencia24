@@ -604,6 +604,7 @@ jQuery.Class("Vtiger_Edit_Js",{
 				
 		//modify by jmangarret 22jun2015				
 		if (app.getModuleName()=="RegistroDePagos" && app.getViewName()=="Edit"){
+			//AJAX PARA VALIDAR REFERENCIA BANCARIA
 			jQuery("#RegistroDePagos_editView_fieldName_referencia").change(function(){
     		var ajax_data = {
 					"ref" : jQuery("#RegistroDePagos_editView_fieldName_referencia").val()					
@@ -618,7 +619,32 @@ jQuery.Class("Vtiger_Edit_Js",{
 						}
 				});
 			});	
-		}		
+			//AJAX PARA VALIDAR REGISTRO DE VENTA ASOCIADO jmangarret 20JUL2016
+			    jQuery("input[name='registrodeventasid']").onchange(function(){	
+			    	alert(jQuery(input[name='registrodeventasid']).val());
+			    });	
+/*
+				jQuery("#registrodeventasid_display").blur(function(){				
+					var m= jQuery("input[name=registrodeventasid]").val();
+					alert(m);
+	    			var ajax_data2 = {
+	    				"accion" : "valOrigen",      
+						"id" : jQuery("input[name=registrodeventasid]").val()					
+					};		
+					jQuery.ajax({
+						data: ajax_data2,
+						url: 'modules/RegistroDeVentas/ajaxValidarVentas.php',
+						type: 'get',
+						success: function(response){														
+						    if (!response){
+	                            bootbox.alert("Debe Actualizar Origen de la Venta para Cargar Pagos...");                                     
+	                            //setTimeout(function(){ window.location.assign("index.php?module=RegistroDeVentas&view=Detail&record={$PARENT_RECORD->getId()}"); }, 3000);
+	                        }     
+					}
+					});
+				});	
+*/					
+		}	
 		//end
 
 
