@@ -1325,7 +1325,7 @@ function _setPageSize($format, &$orientation) {
 	}
 	else
 	{
-		if (!$format[0] || !$format[1]) { $this->Error('Invalid page format: '.$format[0].' '.$format[1]); }
+		if (!$format[0] || !$format[1]) { $this->Error('Invalid page format: aaa'.$format[0].' '.$format[1]); }
 		$this->fwPt=$format[0]*$this->k;
 		$this->fhPt=$format[1]*$this->k;
 	}

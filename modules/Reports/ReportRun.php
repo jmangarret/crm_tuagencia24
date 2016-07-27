@@ -3940,7 +3940,8 @@ class ReportRun extends CRMEntity
 			foreach($totalxls as $key=>$array_value) {
 				$count = 0;
 				
-				foreach($array_value as $hdr=>$value) {					
+				foreach($array_value as $hdr=>$value) {	
+					if ($value>0){						
 					$value = decode_html($value);
 					//$worksheet->setCellValueExplicitByColumnAndRow($count, $key+$rowcount, $value);
 					//jmangarret 22jul2016 mejora agregacion de columna de titulos a totales
@@ -3948,6 +3949,7 @@ class ReportRun extends CRMEntity
 					$worksheet->setCellValueExplicitByColumnAndRow($count+1, $key+$rowcount, $value);					
 					//$count = $count + 1;
 					$count = $count + 3;
+					}
 				}
 			}
 		}
