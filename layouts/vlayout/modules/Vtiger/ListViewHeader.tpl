@@ -77,19 +77,9 @@
 								data: ajax_data1,
 								url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
 								type: 'get',
-								success: function(response){									
-									if (response=="Completado"){
-										bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
-										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
-									}
-									if (response=="Incompleto"){
-										bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
-										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
-									}
-									if (response=="Fallido"){
-										bootbox.alert("No se procesó ningún localizador por falta de contactos."); 										
-										setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
-									}									
+								success: function(response){														
+									if (response!='')
+									bootbox.alert(response);
 								}
 							});
 					    });	
@@ -227,6 +217,12 @@
 						</select>
 					</td>
 					<td class="fieldLabel wide">
+						<span> Asesoras: </span><br>
+						<select class="asesoras-select" id="asesoras-select">
+							<option value="">--Seleccione--</option>
+						</select>
+					</td>
+					<td class="fieldLabel wide">
 						<span> Procesados: </span>
 						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> 
 					</td>
@@ -278,6 +274,18 @@
 					}
 				});
 
+				var ajax_data4={
+					"accion" : "select_asesoras"
+				};
+				jQuery.ajax({
+					data: ajax_data4,
+					url: 'modules/Localizadores/ajaxReporteSatelites.php',
+					type: 'get',
+					success: function(responses){								
+						$("#asesoras-select").append(responses);
+					}
+				});
+
 	 		$('#{$MODULE}_listView_basicAction_Buscar').click(function(){											        
 	            var ajax_data = {
 	            "userid"      : $("#current_user_id").val(),						
@@ -289,7 +297,8 @@
 				"fecha_hasta" : $("#fechaemision2").val(),
 				"localizador" : $("#text-localizador").val(),
 				"boleto"	  : $("#text-boleto").val(),
-				"estatus"	  : $("#option-estatus").val()
+				"estatus"	  : $("#option-estatus").val(),
+				"asesoras"	  : $("#asesoras-select").val()
 
 
 				};	
