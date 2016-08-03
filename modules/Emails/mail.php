@@ -72,7 +72,37 @@ function send_mail($module,$to_email,$from_name,$from_email,$subject,$contents,$
 
 	$mail = new PHPMailer();
 
-	setMailerProperties($mail,$subject,$contents,$from_email,$from_name,trim($to_email,","),$attachment,$emailid,$module,$logo);
+	//setMailerProperties($mail,$subject,$contents,$from_email,$from_name,trim($to_email,","),$attachment,$emailid,$module,$logo);
+
+
+
+	$mail->Subject = $subject;
+	$mail->Body    = nl2br($contents);//"This is the HTML message body <b>in bold!</b>";
+
+
+	$mail->IsSMTP();                                      // set mailer to use SMTP
+	
+		$mailserverresult=$adb->pquery("select * from vtiger_systems where server_type='email'", array());
+		$mail_server = $adb->query_result($mailserverresult,0,'server');
+		$mail_server_username = $adb->query_result($mailserverresult,0,'server_username');
+		$mail_server_password = $adb->query_result($mailserverresult,0,'server_password');
+		$smtp_auth = $adb->query_result($mailserverresult,0,'smtp_auth');
+
+		$_REQUEST['server']=$mail_server;
+		$log->info("Mail Server Details => '".$mail_server."','".$mail_server_username."','".$mail_server_password."'");
+
+	
+	$mail->Host = $mail_server;			// specify main and backup server
+	if($smtp_auth == 'true')
+		$mail->SMTPAuth = true;
+	else
+		$mail->SMTPAuth = false;
+	$mail->Username = $mail_server_username ;	// SMTP username
+	$mail->Password = $mail_server_password ;	// SMTP password
+	$mail->From = $from;
+	$mail->FromName = $initialfrom;
+	
+
 	setCCAddress($mail,'cc',$cc);
 	setCCAddress($mail,'bcc',$bcc);
 	if(!empty($replyToEmail)) {

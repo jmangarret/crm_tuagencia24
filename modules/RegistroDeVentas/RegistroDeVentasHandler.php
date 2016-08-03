@@ -79,6 +79,8 @@ class RegistroDeVentasHandler extends VTEventHandler {
 			$totalDs=$totalBoletosDolares+$totalProductosDolares;
 			$log->debug("Entering handle totalboletosproductos ".$totalBoletosBs." - ".$totalProductosBs);
 			*/
+			if (!$totalProductosBs) $totalProductosBs=0;
+			if (!$totalProductosDolares) $totalProductosDolares=0;
 			$sql="UPDATE vtiger_registrodeventas SET totalventabs=totalventabs+?, totalventadolares=totalventadolares+? WHERE registrodeventasid = ?";
 			$result = $adb->pquery($sql, array($totalProductosBs, $totalProductosDolares,  $idVenta));	
 			//$result = $adb->pquery($sql, array($totalBs, $totalDs, $totalBs, $totalDs, $idVenta));	query anterior may2016
