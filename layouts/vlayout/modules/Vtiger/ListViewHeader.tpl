@@ -86,8 +86,6 @@
 					});						
 					</script>
 
-
-
 					{/if}
 
 					{if $MODULE eq 'Boletos'}
@@ -184,7 +182,7 @@
 				<tr>
 					<td class="fieldLabel wide">
 						<span> Localizador: </span><br>
-						<input type="text" name="text-localizador" id="text-localizador">
+						<input name="text-localizador" id="text-localizador" >
 					</td>
 					<td class="fieldLabel wide">
 						<span> Nº de Boleto: </span><br>
@@ -202,6 +200,12 @@
 							<option value="">--Seleccione--</option>
 						</select>
 					</td>
+						<td class="fieldLabel wide">
+						<span> Asesores: </span><br>
+						<select class="asesoras-select" id="asesoras-select">
+							<option value="">--Seleccione--</option>
+						</select>
+					</td>
 				</tr><tr>
 					<td class="fieldLabel wide">
 						<span> Desde: </span><br>
@@ -216,10 +220,14 @@
 							<option value="">--Seleccione--</option>
 						</select>
 					</td>
+					<!--1/08/16 RURIEPE SELECT PARA TIPO DE VENTAS-->
 					<td class="fieldLabel wide">
-						<span> Asesoras: </span><br>
-						<select class="asesoras-select" id="asesoras-select">
-							<option value="">--Seleccione--</option>
+						<span> Tipo de Venta: </span><br>
+						<select class="tventa-select" id="tventa-select">
+							<option value="1">Todas</option>
+							<option value="2">Ventas Propias</option>
+							<option value="3">Ventas Satélites</option>
+							<option value="4">Ventas SOTO</option>
 						</select>
 					</td>
 					<td class="fieldLabel wide">
@@ -298,7 +306,8 @@
 				"localizador" : $("#text-localizador").val(),
 				"boleto"	  : $("#text-boleto").val(),
 				"estatus"	  : $("#option-estatus").val(),
-				"asesoras"	  : $("#asesoras-select").val()
+				"asesoras"	  : $("#asesoras-select").val(),
+				"tventa"	  : $("#tventa-select").val()
 
 
 				};	
@@ -313,6 +322,7 @@
 		    });	
 		});						
 		</script>
+
 	{/if}
 	<!--fin jmangarret BUSQUEDA POR REPORTE PARA SATELITES feb2016!-->				   
 {/strip}
