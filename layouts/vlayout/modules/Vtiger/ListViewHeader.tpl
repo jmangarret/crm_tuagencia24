@@ -86,8 +86,6 @@
 					});						
 					</script>
 
-
-
 					{/if}
 
 					{if $MODULE eq 'Boletos'}
@@ -184,7 +182,7 @@
 				<tr>
 					<td class="fieldLabel wide">
 						<span> Localizador: </span><br>
-						<input type="text" name="text-localizador" id="text-localizador">
+						<input name="text-localizador" id="text-localizador" >
 					</td>
 					<td class="fieldLabel wide">
 						<span> Nº de Boleto: </span><br>
@@ -202,6 +200,12 @@
 							<option value="">--Seleccione--</option>
 						</select>
 					</td>
+						<td class="fieldLabel wide">
+						<span> Asesores: </span><br>
+						<select class="asesoras-select" id="asesoras-select">
+							<option value="">--Seleccione--</option>
+						</select>
+					</td>
 				</tr><tr>
 					<td class="fieldLabel wide">
 						<span> Desde: </span><br>
@@ -216,24 +220,27 @@
 							<option value="">--Seleccione--</option>
 						</select>
 					</td>
-					<td class="fieldLabel wide">
-						<span> Asesoras: </span><br>
-						<select class="asesoras-select" id="asesoras-select">
-							<option value="">--Seleccione--</option>
+					<!--1/08/16 RURIEPE SELECT PARA TIPO DE VENTAS-->
+					<td class="fieldLabel wide" >
+						<span> Tipo de Venta: </span><br>
+						<select class="tventa-select" id="tventa-select">
+							<option value="1">Todas</option>
+							<option value="2">Ventas Propias</option>
+							<option value="3">Ventas Satélites</option>
+							<option value="4">Ventas SOTO</option>
 						</select>
 					</td>
 					<td class="fieldLabel wide">
 						<span> Procesados: </span>
-						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> 
-					</td>
-					<td class="fieldLabel wide">
+						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> &nbsp; &nbsp; &nbsp; &nbsp;
 						<a href="javascript:void(0);">
-						<button id="{$MODULE}_listView_basicAction_Buscar" class="btn">								
+					<button  id="{$MODULE}_listView_basicAction_Buscar" class="btn">								
 						<strong>Buscar</strong> 
 						</button>
 						</a>
-						<span id="searchIcon" class="add-on search-icon"><i class="icon-white icon-search "></i></span>
+						<span id="searchIcon" class="add-on search-icon"><i class="icon-white icon-search "></i></span> 
 					</td>
+						
 				</tr>
 			</table>	
 		</form>	
@@ -298,7 +305,8 @@
 				"localizador" : $("#text-localizador").val(),
 				"boleto"	  : $("#text-boleto").val(),
 				"estatus"	  : $("#option-estatus").val(),
-				"asesoras"	  : $("#asesoras-select").val()
+				"asesoras"	  : $("#asesoras-select").val(),
+				"tventa"	  : $("#tventa-select").val()
 
 
 				};	
@@ -313,6 +321,84 @@
 		    });	
 		});						
 		</script>
+
 	{/if}
-	<!--fin jmangarret BUSQUEDA POR REPORTE PARA SATELITES feb2016!-->				   
+	<!--fin jmangarret BUSQUEDA POR REPORTE PARA SATELITES feb2016!-->	
+
+	<!-- RURIEPE 1/08/16  - FILTROS(SELECT PARA LA BUSQUEDA DE INFORMACION)-->				   
+	{if $MODULE eq 'ComisionSatelites'}	
+		<form action="" name="frmBuscar" method="post" onSubmit="return false">
+			<table class="table showInlineTable">
+				<tr>
+					<td class="fieldLabel" width="250">
+						<span> Satélite: </span><br>
+						<select class="option-satelite" id="option-satelite">
+							<option value="">--Seleccione--</option>
+						</select>
+					</td>
+					<td class="fieldLabel" width="250">
+						<span> Tipo de Comisión: </span><br>
+						<select class="option-tcomision" id="option-tcomision">
+							<option value="">--Seleccione--</option>
+						</select>
+					</td>
+
+					<td class="fieldLabel wide">
+						<a href="javascript:void(0);">
+							<button id="{$MODULE}_listView_basicAction_Buscar2" class="btn">	
+						 		<strong>Buscar</strong> 
+							</button>
+						</a>
+						<span id="searchIcon" class="add-on search-icon"><i class="icon-white icon-search "></i></span>
+					</td>
+				</tr>
+			</table>	
+		</form>	
+		<script type="text/javascript">										 
+		 $(document).ready(function() {	
+		 		var ajax_data1 ={
+		 			"accion": "select_satelite"
+		 		};
+		 		jQuery.ajax({
+		 			data: ajax_data1,					
+					url: 'modules/ComisionSatelites/ajaxReporteComisiones.php',
+					type: 'get',
+					success: function(responses){								
+						$("#option-satelite").append(responses);
+					}
+				});	
+
+				var ajax_data2={
+					"accion" : "select_tcomision"
+				};
+				jQuery.ajax({
+					data: ajax_data2,
+					url: 'modules/ComisionSatelites/ajaxReporteComisiones.php',
+					type: 'get',
+					success: function(responses){								
+						$("#option-tcomision").append(responses);
+					}
+				});
+
+
+	 		$('#{$MODULE}_listView_basicAction_Buscar2').click(function(){											        
+	            var ajax_data = {
+	            "userid"      : $("#current_user_id").val(),						
+				"accion"      : "listarBusqueda",
+				"satelite"    : $("#option-satelite").val(),
+				"tcomision"   : $("#option-tcomision").val()
+				};	
+				jQuery.ajax({
+					data: ajax_data,
+					url: 'modules/ComisionSatelites/ajaxReporteComisiones.php',
+					type: 'post',
+					success: function(response){								
+						$("div.listViewEntriesDiv.contents-bottomscroll").html(response);
+					}
+				});
+		    });	
+		});						
+		</script>
+
+	{/if}			   
 {/strip}
