@@ -12,7 +12,7 @@
 	if ($_REQUEST["accion"]=="select_satelite")
 	{
 		$query = "SELECT accountid, accountname FROM `vtiger_account` 
-		WHERE `account_type` LIKE 'Satelite' ";
+		WHERE `account_type` LIKE 'Satelite' ORDER BY accountname ASC ";
 
 		if($filtro = mysql_query($query))
 		{
@@ -31,7 +31,7 @@
 	//SELECT GDS
 	if ($_REQUEST["accion"]=="select_gds")
 	{
-		$query = "SELECT gds FROM vtiger_gds";
+		$query = "SELECT gds FROM vtiger_gds ORDER BY gds ASC";
 
 		if($filtro = mysql_query($query))
 		{
@@ -51,7 +51,7 @@
 	//SELECT ESTATUS
 	if ($_REQUEST["accion"]=="select_status")
 	{
-		$query = "SELECT DISTINCT status FROM vtiger_boletos";
+		$query = "SELECT DISTINCT status FROM vtiger_boletos ORDER BY status ASC";
 
 		if($filtro = mysql_query($query))
 		{
@@ -73,7 +73,7 @@
 	{
 		$query = "SELECT usu.id,usu.first_name,usu.last_name FROM vtiger_users AS usu
 		INNER JOIN vtiger_user2role AS u2r ON u2r.userid = usu.id
-		WHERE u2r.roleid = 'H5'";
+		WHERE (u2r.roleid = 'H3' OR u2r.roleid = 'H5' OR u2r.roleid = 'H7')AND status = 'Active' ORDER BY first_name ASC";
 
 		if($filtro = mysql_query($query))
 		{
@@ -99,15 +99,27 @@
 		{
 
 			$else = 1;
-			$query="SELECT loc.localizadoresid,loc.localizador,loc.contactoid,
-			loc.paymentmethod,loc.registrodeventasid,loc.procesado,loc.gds,bol.amount,
-			bol.fecha_emision,bol.boleto1,bol.boletosid,bol.tipodevuelo,bol.status,
-			usu.first_name,usu.last_name
+			$query="SELECT 
+			loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid,
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds,
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1,
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.status,
+			usu.first_name,
+			usu.last_name
 			FROM vtiger_localizadores AS loc 
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." AND usu.id='".$_REQUEST["asesoras"]."' ";
+			WHERE procesado=".$_REQUEST['proc']." AND usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -124,33 +136,35 @@
 			if ($_REQUEST["estatus"])
 				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
 				$query.=" ORDER BY bol.fecha_emision DESC ";
+
 		}	
 
-		//RURIEPE 1/08/2016 - CONSULTA QUE SE REALZA PARA LA VENTAS PROPIAS POR ASESORA
 		else if ($_REQUEST["tventa"] == 2 AND $_REQUEST["asesoras"]!="")
 		{
 			$else=1;
-			$query="SELECT loc.localizadoresid,loc.localizador,loc.contactoid, 
-			loc.paymentmethod,loc.registrodeventasid,loc.procesado,loc.gds,
-			bol.boletosid,bol.tipodevuelo,bol.amount,bol.fecha_emision,bol.boleto1, 
-			bol.status,usu.first_name,usu.last_name
+			//RURIEPE 1/08/2016 - SE REALIZA UNA UNION DE DOS CONSULTAS. EL PRIMER QQURY SE ENCARGA DE CONSULTAR LOS CAMPOS SOLICITADOS FILTRANDO contactoid IS NULL OR contactoid='' Y EL SEGUNDO QUERY SE ENCRGAR DE CONSULTAR FILTRANDO POR EL isSatelite.
+
+			$query="SELECT loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid, 
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds,
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1, 
+			bol.status,
+			usu.first_name,
+			usu.last_name
 			FROM vtiger_localizadores AS loc 
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
 			WHERE procesado=".$_REQUEST['proc']." AND usu.id='".$_REQUEST["asesoras"]."'
-			 AND (contactoid IS NULL OR contactoid='') 
-			 UNION ALL
-			SELECT loc.localizadoresid,loc.localizador,loc.contactoid, 
-			loc.paymentmethod,loc.registrodeventasid,loc.procesado,loc.gds,
-			bol.boletosid,bol.tipodevuelo,bol.amount,bol.fecha_emision,bol.boleto1, 
-			bol.status,usu.first_name,usu.last_name
-			FROM vtiger_localizadores AS loc 
-			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
-			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
-			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
-			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." AND con.isSatelite='0' AND usu.id=".$_REQUEST["asesoras"]."";
+			AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -166,9 +180,50 @@
 
 			if ($_REQUEST["estatus"])
 				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
-				$query.=" ORDER BY fecha_emision DESC ";
+				$query.=" 
 
+			UNION ALL
+
+			(SELECT loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid, 
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds,
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1, 
+			bol.status,
+			usu.first_name,
+			usu.last_name
+			FROM vtiger_localizadores AS loc 
+			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
+			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
+			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
+			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
+			WHERE procesado=".$_REQUEST['proc']." AND con.isSatelite='0' AND usu.id=".$_REQUEST["asesoras"]." AND bol.status != 'Anulado'";
+
+			if ($_REQUEST["gds"])
+				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
+				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
+
+			if ($_REQUEST["localizador"])
+				$query.=" AND loc.localizador LIKE '%".$_REQUEST["localizador"]."%' ";
+
+			if ($_REQUEST["boleto"])
+				$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
+
+			if ($_REQUEST["estatus"])
+				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
+				$query.=" ) ORDER BY fecha_emision DESC ";
+		
 		}	
+
 
 		//RURIEPE 1/08/2016 - CONSULTA QUE SE REALZA PARA LA VENTAS SATELITES POR ASESORA
 		else if ($_REQUEST["tventa"] == 3 AND $_REQUEST["asesoras"]!="")
@@ -184,7 +239,7 @@
 			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
 			INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." AND con.isSatelite='1' AND usu.id='".$_REQUEST["asesoras"]."'";
+			WHERE procesado=".$_REQUEST['proc']." AND con.isSatelite='1' AND usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -204,6 +259,7 @@
 			if ($_REQUEST["estatus"])
 				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
 				$query.=" ORDER BY bol.fecha_emision DESC ";
+
 		}	
 
 		//RURIEPE 1/08/2016 - CONSULTA QUE SE REALZA PARA LA VENTAS SOTO POR ASESORA
@@ -224,6 +280,7 @@
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
 
@@ -238,12 +295,111 @@
 				$query.=" ORDER BY bol.fecha_emision DESC ";
 		}	
 
+		//RURIEPE 4/08/2016 - CONSULTA QUE SE REALZA PARA LA VENTAS PROPIAS GENERAL
+		else if ($_REQUEST["tventa"] == 2 AND $_REQUEST["asesoras"]=="" )
+		{
+			$else=1;
+			//RURIEPE 1/08/2016 - SE REALIZA UNA UNION DE DOS CONSULTAS. EL PRIMER QQURY SE ENCARGA DE CONSULTAR LOS CAMPOS SOLICITADOS FILTRANDO contactoid IS NULL OR contactoid='' Y EL SEGUNDO QUERY SE ENCRGAR DE CONSULTAR FILTRANDO POR EL isSatelite.
+
+			$query="SELECT 
+			loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid, 
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds,
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1, 
+			bol.status,
+			usu.first_name,
+			usu.last_name
+			FROM vtiger_localizadores AS loc 
+			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
+			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
+			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
+			WHERE procesado=".$_REQUEST['proc']." AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
+
+
+			if ($_REQUEST["gds"])
+				$query.=" AND loc.gds= '".$_REQUEST["gds"]."'";
+
+			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
+				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
+
+			if ($_REQUEST["localizador"])
+				$query.=" AND loc.localizador LIKE '%".$_REQUEST["localizador"]."%' ";
+
+			if ($_REQUEST["boleto"])
+				$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
+
+			if ($_REQUEST["estatus"])
+				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
+				$query.="
+			
+			UNION ALL
+
+			(SELECT loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid, 
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds,
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1, 
+			bol.status,
+			usu.first_name,
+			usu.last_name
+			FROM vtiger_localizadores AS loc 
+			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
+			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
+			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
+			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
+			WHERE procesado=".$_REQUEST['proc']." AND con.isSatelite='0' AND bol.status != 'Anulado'";
+
+			if ($_REQUEST["gds"])
+				$query.=" AND loc.gds= '".$_REQUEST["gds"]."'";
+
+			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
+				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
+
+			if ($_REQUEST["localizador"])
+				$query.=" AND loc.localizador LIKE '%".$_REQUEST["localizador"]."%' ";
+
+			if ($_REQUEST["boleto"])
+				$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
+
+			if ($_REQUEST["estatus"])
+				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
+				$query.=" )ORDER BY fecha_emision DESC ";
+
+		}
+
 		//CONSULTA QUE SE REALILZA SI EL $_REQUEST["satelite"] ES DIFERENTE DE VACIO
 		else if ($_REQUEST["satelite"]!="")
 		{
-			$query="SELECT loc.localizadoresid,loc.localizador,con.contactid,con.firstname, 
-			con.lastname,loc.paymentmethod,loc.registrodeventasid,loc.procesado,loc.gds, 
-			bol.amount,bol.fecha_emision,bol.boleto1,bol.status,usu.first_name,usu.last_name
+			$query="SELECT loc.localizadoresid,
+			loc.localizador,
+			con.contactid,
+			con.firstname, 
+			con.lastname,
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds, 
+			bol.amount,
+			bol.fecha_emision,
+			bol.boleto1,
+			bol.status,
+			usu.first_name,
+			usu.last_name
 			FROM vtiger_account AS acc 
 			INNER JOIN vtiger_contactdetails AS con ON acc.accountid=con.accountid 
 			INNER JOIN vtiger_localizadores AS loc ON loc.contactoid=con.contactid 
@@ -349,7 +505,6 @@
 	if($_REQUEST['tventa'] == 1 || $_REQUEST['tventa'] == 2 || 
 	$_REQUEST['tventa'] == 3 AND $_REQUEST["asesoras"]!="")
 	{
-		echo $bemitidos2;
 ?>
 <h3>
 	<!--RURIEPE 3/08/2016 - TABLA PARA MOSTRAR RESUMEN DE TOTALES-->
@@ -360,7 +515,7 @@
 		<tr>
 			
 			<td width=150></td>
-			<td width=410>Total Emitidos (Procesados): <?php echo $bemitidos+$bemitidos2 ?> </td>
+			<td width=410>Total Emitidos (Procesados): <?php echo $bemitidos?> </td>
 			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
 			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
 			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
@@ -394,6 +549,34 @@ else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
 		<tr>
 			<td width=50></td>
 			<td width=500>Total SOTOS (No Procesados): <?php echo $bsemitidos ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</h3>
+
+<?php
+//RURIEPE 3/08/2016 - ELSE PARA MOSTRAR RESUMEN DE TOTALES DE VENTAS PROPIAS GENERALES
+}else if($_REQUEST['tventa'] == 2){?>
+<h3>
+	<table>
+		<?php
+		//RURIEPE 3/08/2016 - CONDICIONAL PARA INDICAR QUE EL RESUMEN ES DE PROCESADOS O NO PROCESADOS
+		if($_REQUEST['proc'] == 'true'){?>
+		<tr>
+			
+			<td width=150></td>
+			<td width=410>Total Emitidos (Procesados): <?php echo $bemitidos ?> </td>
+			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
+			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
+			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
+		</tr>
+		<?php }else{ ?>
+		<tr>
+			<td width=150></td>
+			<td width=420>Total Emitidos (No Procesados): <?php echo $bemitidos ?> </td>
+			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
+			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
+			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
 		</tr>
 		<?php } ?>
 	</table>
@@ -482,7 +665,7 @@ if($filtro = mysql_query($query))
 		$nombre = mysql_fetch_assoc($resultado);		    
 ?>
 <!--Array para mostrar campo Contacto-->
-<a href='?module=Contacts&view=Detail&record=<?=$row["contactid"]?>' title='Contactos'><?=$nombre["firstname"]." ".$nombre["lastname"]?>
+<a href='?module=Contacts&view=Detail&record=<?=$row["contactoid"]?>' title='Contactos'><?=$nombre["firstname"]." ".$nombre["lastname"]?>
 </a>
 </td>
 
