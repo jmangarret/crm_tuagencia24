@@ -83,9 +83,9 @@ class phpReportGenerator
 		//Check If our table has to be surrounded by an additional table
 		//which increase style of this table
 		if ($this->surrounded == true) 
-			echo "<table width='$this->width'  border='1' cellspacing='0' cellpadding='0'><tr><td>";
+			echo "<table width='$this->width'  border='1' cellspacing='0' cellpadding='0' class='table table-bordered'><tr><td>";
 			
-		echo "<table width='$this->modified_width'  border='$this->border' cellspacing='$this->cellspace' cellpadding='$this->cellpad'>";
+		echo "<table width='$this->modified_width'  border='$this->border' cellspacing='$this->cellspace' cellpadding='$this->cellpad' class='table table-bordered'>";
 		echo "<tr bgcolor = '$this->header_color'>";
 		
 		//Header Draw

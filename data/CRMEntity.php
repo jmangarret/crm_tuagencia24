@@ -1598,7 +1598,7 @@ class CRMEntity {
 	 * @param mixed Integer or Array of related module record number
 	 */
 	function save_related_module($module, $crmid, $with_module, $with_crmid) {
-		global $adb;
+		global $adb, $log;
 		if (!is_array($with_crmid))
 			$with_crmid = Array($with_crmid);
 		foreach ($with_crmid as $relcrmid) {
@@ -1618,6 +1618,60 @@ class CRMEntity {
 					continue;
 
 				$adb->pquery("INSERT INTO vtiger_crmentityrel(crmid, module, relcrmid, relmodule) VALUES(?,?,?,?)", Array($crmid, $module, $relcrmid, $with_module));
+
+				// jmangarret 09ago2016 Enviar correo si es SOTO
+				if ($module="RegistroDeVentas" && $with_module="Localizadores"){
+					$log->debug("Enviando correo SOTO");
+					$host= $_SERVER["HTTP_HOST"];
+
+					$sql="SELECT localizador FROM vtiger_localizadores WHERE localizadoresid=?";
+					$result = $adb->pquery($sql, array($relcrmid));	
+					$row = $adb->fetch_row($result);
+					$loc=$row[0];
+
+					$sql="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=?";
+					$result = $adb->pquery($sql, array($crmid));	
+					$row = $adb->fetch_row($result);
+					$venta=$row[0];
+					
+					$email="tuagencia.sistemas01@gmail.com";
+					$nombre="Hola,";
+					$asunto="Prueba CRM - Verificar Datos (Reserva de SOTO)";
+					$mensaje = " 
+					<html>
+					<head> 
+					<title>Info - Tu Agencia 24</title> 
+					</head> 
+					<body> 
+					<p>".$nombre."</p>
+					<p>Se ha registrado una Reserva de SOTO para la Verificacion de Datos:</p>					
+					<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$relcrmid."'>".$loc."</a></p>		
+					<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$crmid."'>".$venta."</a></p>		
+					<BR><BR><BR>
+					<i>
+					Gracias,		
+					<p>Equipo TuAgencia24.com</p>
+					</i>
+					</body> 
+					</html> "; 
+					//Verificamos si es un SOTO
+					$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE localizadoresid=? AND gds= ?";
+					$result = $adb->pquery($sqlSoto, array($relcrmid,"Servi"));	
+					$row = $adb->fetch_row($result);
+					$esSoto=$row[0];
+
+					if ($esSoto)				
+					$envio=enviarEmail($email,$asunto,$mensaje);			
+					if ($envio){
+						$log->debug("correo SOTO Enviado");
+						//Por base de datos el procedure setCrmEntityRel actualiza el status Soto de la venta a Reservado
+					}else{
+						$log->debug("Error Enviando correo SOTO ".$envio);
+					}
+
+				}
+				//Fin enviar correo
+
 			}
 		}
 	}

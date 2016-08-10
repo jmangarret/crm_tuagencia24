@@ -1850,7 +1850,7 @@ table .span24 {
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
+.dropdown-menu .active {
   color: #ffffff;
   text-decoration: none;
   background-color: #0088cc;
@@ -2661,7 +2661,7 @@ input[type="submit"].btn.btn-mini {
 }
 .nav-tabs .open .dropdown-toggle,
 .nav-pills .open .dropdown-toggle,
-.nav > .open.active > a:hover {
+.nav > .open.active {
   color: #ffffff;
   background-color: #999999;
   border-color: #999999;

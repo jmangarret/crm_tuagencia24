@@ -6,7 +6,7 @@ class RegistroDePagosHandler extends VTEventHandler {
     	$log->debug("Entering handle event pagos ".$a);
         $moduleName = $entityData->getModuleName();
         if ($moduleName == 'RegistroDePagos') {  
-        	if ($eventName == 'vtiger.entity.beforesave') {          						
+        	if ($eventName == 'vtiger.entity.aftersave') {          						
 				//$idp=$entityData->getId(); //OBTIENE ID DEL PAGO
 				//$idpago=$_REQUEST["record"];
 				//$this->updatePagos($idpago,$idVenta,NULL);
@@ -14,6 +14,18 @@ class RegistroDePagosHandler extends VTEventHandler {
 				$idpago		=$_REQUEST["record"];
 				$idVenta=$_REQUEST["registrodeventasid"];
 				$statuspago=$_REQUEST["pagostatus"];
+
+				$sql="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=?";
+				$result = $adb->pquery($sql, array($idVenta));	
+				$row = $adb->fetch_row($result);
+				$venta=$row[0];
+
+				$sql="SELECT referencia FROM vtiger_registrodepagos WHERE registrodepagosid=?";
+				$result = $adb->pquery($sql, array($idpago));	
+				$row = $adb->fetch_row($result);
+				$pago=$row[0];
+				
+					
 				$email="tuagencia.sistemas01@gmail.com";
 				$nombre="Hola,";
 				$asunto="Prueba CRM - Emitir SOTO (Pago Verificado)";
@@ -23,10 +35,10 @@ class RegistroDePagosHandler extends VTEventHandler {
 				<title>Info - Tu Agencia 24</title> 
 				</head> 
 				<body> 
-				<p>".$nombre.",</p>
+				<p>".$nombre."</p>
 				<p>Se ha verificado un nuevo pago para la Emisión de SOTO:</p>
-				<p><b>Pago: </b>".$idpago."</p>				
-				<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$idVenta."'>Click aqui</a></p>		
+				<p><b>Referencia de Pago: </b>".$pago."</p>				
+				<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$idVenta."'>".$venta."</a></p>		
 				<BR><BR><BR>
 				<i>
 				Gracias,		
@@ -35,7 +47,7 @@ class RegistroDePagosHandler extends VTEventHandler {
 				</body> 
 				</html> "; 
 				//Verificamos si es un SOTO
-				$sqlSoto="SELECT 1 FROM vtiger_localizadores WHERE registrodeventasid=? AND gds= ?";
+				$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE registrodeventasid=? AND gds= ?";
 				$result = $adb->pquery($sqlSoto, array($idVenta,"Servi"));	
 				$row = $adb->fetch_row($result);
 				$esSoto=$row[0];
