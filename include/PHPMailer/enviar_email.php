@@ -65,5 +65,8 @@ function enviarEmail($email,$asunto,$mensaje){
 	$enviar_mail=$mail->send();
 	if (!$enviar_mail) {
 		$log->debug ("Mailer Error: $mailFrom $mailUser $mailPass" . $mail->ErrorInfo);
-	} 
+		return false;
+	}else{
+		return true;
+	}
 }

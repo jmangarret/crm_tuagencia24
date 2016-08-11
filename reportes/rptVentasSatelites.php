@@ -41,6 +41,16 @@ include("librerias.php");
 	</table>	
 	</div>
 	<?
+	$items=$_REQUEST["items"];
+	$init=$_REQUEST["init"];
+	$pag=$_REQUEST["pag"];
+	//Condiciones e Inicializacion de Variables para la paginacion, luego estas variables son enviadas por la url al paginar resultados
+	if (!$items) $items=100; //Total de Registros por Pagina $totRegPag
+	$totRegPorPag=$items;
+	if (!$init) $init=0; //Posicion 0, Primer registro. Inicio de lote de registros, a partir de que num de registro se muestra el query
+	if (!$pag) $pag=1; // Num. de pagina segun el total de registros y el totRegPag.
+	
+
 	date_default_timezone_set("America/Caracas");
 	include_once("phpReportGen.php");
 	$prg = new phpReportGenerator();
@@ -48,11 +58,11 @@ include("librerias.php");
 	$prg->cellpad = "0";
 	$prg->cellspace = "0";
 	$prg->border = "1";
-	$prg->header_color = "#666666";
-	$prg->header_textcolor="#FFFFFF";
+	//$prg->header_color = "#666666";
+	//$prg->header_textcolor="#FFFFFF";
 	$prg->body_alignment = "left";
-	$prg->body_color = "#CCCCCC";
-	$prg->body_textcolor = "black";
+	//$prg->body_color = "#CCCCCC";
+	//$prg->body_textcolor = "black";
 	$prg->surrounded = '1';
 	
 	$sql = "select ticket_number as Ticket, org_name as Satelite, localizador as LOC, gds as GDS, ticket_creado as Fecha, ";
@@ -70,13 +80,24 @@ include("librerias.php");
 	}else{
 		echo "<div align=center><strong>Mostrando: ".$_REQUEST['org']." Todos los Registros...</strong></div>";
 	}	
-	$sql.= "order by ticket_number, org_name";
+	$sql.= "order by ticket_number DESC, org_name DESC ";
+
+	//detectamos cuantos registros son en general para totalizar y calcular
+	$listado= mysql_query($sql);
+	$totalRegistros=mysql_num_rows($listado); 
+	//Consultamos los registros reales a mostrar segun la paginacion.	
+
+	$sql.=" limit $init, $totRegPorPag ";
+
 	//echo $sql;
+
 	$res = mysql_query($sql);
 	$prg->mysql_resource = $res;	
 	$prg->title = "Listado de Ventas";
 	$prg->generateReport();
 	
+	include("paginar.php");
+
 	?>
 </body>
 </html>
