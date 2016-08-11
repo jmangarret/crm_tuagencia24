@@ -92,8 +92,8 @@
 	//RESPONSE LISTAR RESULTADOS DE LA BUSQUEDA
 	if ($_REQUEST["accion"]=="listarBusqueda")
 	{
-		if ($_REQUEST["proc"])	$p = "1";
-		if (!$_REQUEST["proc"])	$p = "0";
+		//if ($_REQUEST["proc"])	$p = "1";
+		//if (!$_REQUEST["proc"])	$p = "0";
 
 		//RURIEPE 1/08/2016 - CONSULTA QUE SE REALIZA PARA CONSULTAR TODAS LAS VENTAS POR ASESOR
 		if ($_REQUEST["tventa"] == 1 AND $_REQUEST["asesoras"]!="")
@@ -127,11 +127,13 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
+			WHERE usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["satelite"])
 				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
@@ -175,13 +177,13 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND usu.id='".$_REQUEST["asesoras"]."'
-			AND (contactoid IS NULL OR contactoid='') 
-			AND bol.status != 'Anulado'";
+			WHERE usu.id='".$_REQUEST["asesoras"]."' AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
@@ -218,12 +220,13 @@
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND usu.id=".$_REQUEST["asesoras"]." 
-			AND bol.status != 'Anulado'"; 
+			WHERE usu.id=".$_REQUEST["asesoras"]." AND bol.status != 'Anulado'"; 
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
@@ -271,13 +274,14 @@
 			$query.="INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
 
 			$query.="INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']."
-			AND con.isSatelite='1' 
-			AND usu.id='".$_REQUEST["asesoras"]."' 
+			WHERE con.isSatelite='1' AND usu.id='".$_REQUEST["asesoras"]."' 
 			AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["satelite"])
 				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
@@ -325,12 +329,14 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND loc.gds='Servi' 
+			WHERE loc.gds='Servi' 
 			AND usu.id='".$_REQUEST["asesoras"]."'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["satelite"])
 				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
@@ -376,12 +382,13 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND (contactoid IS NULL OR contactoid='') 
-			AND bol.status != 'Anulado'";
+			WHERE (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
@@ -418,11 +425,13 @@
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND bol.status != 'Anulado'"; 
+			WHERE bol.status != 'Anulado'"; 
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
@@ -467,11 +476,13 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc']." 
-			AND acc.accountid='".$_REQUEST["satelite"]."' ";
+			WHERE acc.accountid='".$_REQUEST["satelite"]."' ";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
 				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
@@ -516,11 +527,13 @@
 		   	INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
 
 			$query.="
-			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE procesado=".$_REQUEST['proc'];
+			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
 
 			if ($_REQUEST["satelite"])
 				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
@@ -597,7 +610,7 @@
 	<table>
 		<?php
 		//RURIEPE 3/08/2016 - CONDICIONAL PARA INDICAR QUE EL RESUMEN ES DE PROCESADOS O NO PROCESADOS
-		if($_REQUEST['proc'] == 'true'){?>
+		if($_REQUEST['procesado'] == '1'){?>
 		<tr>
 			
 			<td width=150></td>
@@ -606,10 +619,18 @@
 			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
 			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
 		</tr>
-		<?php }else{ ?>
+		<?php }else if($_REQUEST['procesado'] == '0'){ ?>
 		<tr>
 			<td width=150></td>
 			<td width=420>Total Emitidos (No Procesados): <?php echo $bemitidos ?> </td>
+			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
+			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
+			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
+		</tr>
+		<?php }else if($_REQUEST['procesado'] == ''){ ?>
+		<tr>
+			<td width=150></td>
+			<td width=420>Total Emitidos: <?php echo $bemitidos ?> </td>
 			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
 			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
 			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
@@ -625,16 +646,20 @@ else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
 	<table>
 	<?php
 		//RURIEPE 3/08/2016 - CONDICIONAL PARA INDICAR QUE EL RESUMEN ES DE PROCESADOS O NO PROCESADOS PARA TOTALES SOTOS
-		if($_REQUEST['proc'] == 'true') { ?>
+		if($_REQUEST['procesado'] == '1') { ?>
 		<tr>
 			<td width=50></td>
 			<td width=500>Total SOTOS (Procesados): <?php echo $bsemitidos ?></td>
 		</tr>
-		<?php } else {
-		?>
+		<?php } else if($_REQUEST['procesado'] == '0') { ?>
 		<tr>
 			<td width=50></td>
 			<td width=500>Total SOTOS (No Procesados): <?php echo $bsemitidos ?></td>
+		</tr>
+		<?php } else if($_REQUEST['procesado'] == '') { ?>
+		<tr>
+			<td width=50></td>
+			<td width=500>Total SOTOS: <?php echo $bsemitidos ?></td>
 		</tr>
 		<?php } ?>
 	</table>
@@ -647,7 +672,7 @@ else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
 	<table>
 		<?php
 		//RURIEPE 3/08/2016 - CONDICIONAL PARA INDICAR QUE EL RESUMEN ES DE PROCESADOS O NO PROCESADOS
-		if($_REQUEST['proc'] == 'true'){?>
+		if($_REQUEST['procesado'] == '1') { ?>
 		<tr>
 			
 			<td width=150></td>
@@ -656,10 +681,18 @@ else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
 			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
 			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
 		</tr>
-		<?php }else{ ?>
+		<?php }else if($_REQUEST['procesado'] == '0') { ?>
 		<tr>
 			<td width=150></td>
 			<td width=420>Total Emitidos (No Procesados): <?php echo $bemitidos ?> </td>
+			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
+			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
+			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
+		</tr>
+		<?php } else if($_REQUEST['procesado'] == '0') { ?>
+			<tr>
+			<td width=150></td>
+			<td width=420>Total Emitidos: <?php echo $bemitidos ?> </td>
 			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
 			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
 			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
