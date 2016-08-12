@@ -230,9 +230,21 @@
 							<option value="4">Ventas SOTO</option>
 						</select>
 					</td>
-					<td class="fieldLabel wide">
+
+					<!--11/08/16 RURIEPE SELECT PARA TIPO DE VENTAS-->
+					<td class="fieldLabel wide" >
+						<span> Procesados: </span><br>
+						<select class="procesado-select" id="procesado-select">
+							<option value="">--Seleccione--</option>
+							<option value="1">Procesado</option>
+							<option value="0">No Procesado</option>
+						</select>
+					</td>
+					<!--<td class="fieldLabel wide">
 						<span> Procesados: </span>
-						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> &nbsp; &nbsp; &nbsp; &nbsp;
+						<input type="checkbox" name="checkbox-procesado" id="checkbox-procesado"> 
+						</td>-->
+						<td class="fieldLabel wide">
 						<a href="javascript:void(0);">
 					<button  id="{$MODULE}_listView_basicAction_Buscar" class="btn">								
 						<strong>Buscar</strong> 
@@ -299,16 +311,15 @@
 				"accion"      : "listarBusqueda",
 				"satelite"    : $("#chzn-single").val(),
 				"gds"  	 	  : $("#gds-select").val(),
-				"proc"	  	  : $('#checkbox-procesado').is(':checked'),
+				/*"proc"	  	  : $('#checkbox-procesado').is(':checked'),*/
 				"fecha_desde" : $("#fechaemision1").val(),
 				"fecha_hasta" : $("#fechaemision2").val(),
 				"localizador" : $("#text-localizador").val(),
 				"boleto"	  : $("#text-boleto").val(),
 				"estatus"	  : $("#option-estatus").val(),
 				"asesoras"	  : $("#asesoras-select").val(),
-				"tventa"	  : $("#tventa-select").val()
-
-
+				"tventa"	  : $("#tventa-select").val(),
+				"procesado"	  : $("#procesado-select").val()
 				};	
 				jQuery.ajax({
 					data: ajax_data,
