@@ -450,6 +450,119 @@
 				ORDER BY fecha_emision DESC ";
 		}
 
+		//RURIEPE 12/08/2016 - CONSULTA QUE SE REALIZA PARA CONSULTAR LAS VENTAS SATELITES GENERALES
+		else if ($_REQUEST["tventa"] == 3 AND $_REQUEST["asesoras"]=="" )
+		{
+
+			$else=1;
+			$query="SELECT 
+			loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid,
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds, 
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision, 
+			bol.boleto1,
+			bol.status,
+			usu.first_name,
+			usu.last_name
+			FROM vtiger_localizadores AS loc 
+			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
+			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
+			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid ";
+			
+			if ($_REQUEST["satelite"])
+			$query.="INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
+
+			$query.="INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
+			WHERE con.isSatelite='1' AND bol.status != 'Anulado'";
+
+			if ($_REQUEST["gds"])
+				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
+
+			if ($_REQUEST["satelite"])
+				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
+
+			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
+				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
+
+			if ($_REQUEST["localizador"])
+				$query.=" AND loc.localizador LIKE '%".$_REQUEST["localizador"]."%' ";
+
+			if ($_REQUEST["boleto"])
+				$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
+
+			if ($_REQUEST["estatus"])
+				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
+				$query.=" ORDER BY bol.fecha_emision DESC ";
+		}
+
+		//RURIEPE 12/08/2016 - CONSULTA QUE SE REALIZA PARA CONSULTAR LAS VENTAS SOTO GENERALES
+		else if ($_REQUEST["tventa"] == 4 AND $_REQUEST["asesoras"]=="" )
+		{
+
+			$else=1;
+			$query="SELECT loc.localizadoresid,
+			loc.localizador,
+			loc.contactoid, 
+			loc.paymentmethod,
+			loc.registrodeventasid,
+			loc.procesado,
+			loc.gds, 
+			bol.boletosid,
+			bol.tipodevuelo,
+			bol.amount,
+			bol.fecha_emision, 
+			bol.boleto1, 
+			bol.status,
+			usu.first_name,
+			usu.last_name
+			FROM vtiger_localizadores AS loc 
+			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
+			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
+			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid ";
+			
+			if ($_REQUEST["satelite"])
+			$query.="INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
+
+			$query.="
+			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
+			WHERE loc.gds='Servi'";
+
+			if ($_REQUEST["gds"])
+				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
+
+			if ($_REQUEST["procesado"] == '1' OR $_REQUEST["procesado"] == '0' )
+				$query.=" AND loc.procesado= '".$_REQUEST["procesado"]."' ";
+
+			if ($_REQUEST["satelite"])
+				$query.=" AND acc.accountid= '".$_REQUEST["satelite"]."' ";
+
+			if ($_REQUEST["fecha_desde"] && $_REQUEST["fecha_hasta"])
+				$query.=" AND bol.fecha_emision BETWEEN '".$_REQUEST["fecha_desde"]."' AND '".$_REQUEST["fecha_hasta"]."' ";
+
+			if ($_REQUEST["localizador"])
+				$query.=" AND loc.localizador LIKE '%".$_REQUEST["localizador"]."%' ";
+
+			if ($_REQUEST["boleto"])
+				$query.=" AND bol.boleto1 = '".$_REQUEST["boleto"]."' ";
+
+			if ($_REQUEST["estatus"])
+				$query.=" AND bol.status = '".$_REQUEST["estatus"]."' ";
+				$query.=" ORDER BY bol.fecha_emision DESC ";
+		}
+
+
+
+
 		//CONSULTA QUE SE REALILZA SI EL $_REQUEST["satelite"] ES DIFERENTE DE VACIO
 		else if ($_REQUEST["satelite"]!="")
 		{
@@ -600,9 +713,8 @@
 	}
 
 	// RURIEPE 2/08/2016 - CONDICION PARA VALIDAR CUAL OPCION FUE SELECCIONADA. 
-	if($_REQUEST['tventa'] == 1 OR $_REQUEST['tventa'] == 2 
-	OR $_REQUEST['tventa'] == 3 AND $_REQUEST["asesoras"]!="" 
-	OR $_REQUEST['satelite'] != "" )
+	if($_REQUEST['tventa'] == 1 OR $_REQUEST['tventa'] == 2 OR $_REQUEST['tventa'] == 3 
+	 OR $_REQUEST['satelite'] != ""  AND $_REQUEST["asesoras"]!="")
 	{
 ?>
 <h3>
@@ -639,7 +751,7 @@
 	</table>
 </h3>
 <?php } //RURIEPE 3/08/2016 - ELSE PARA MOSTRAR RESUMEN DE TOTALES SOTOS
-else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
+else if ($_REQUEST['tventa'] == 4 ) {
 ?>
 <h3>
 	<!--RURIEPE 3/08/2016 - TABLA PARA MOSTRAR RESUMEN DE TOTALES-->
@@ -666,41 +778,8 @@ else if ($_REQUEST['tventa'] == 4 AND $_REQUEST["asesoras"]!="") {
 </h3>
 
 <?php
-//RURIEPE 3/08/2016 - ELSE PARA MOSTRAR RESUMEN DE TOTALES DE VENTAS PROPIAS GENERALES
-}else if($_REQUEST['tventa'] == 2){?>
-<h3>
-	<table>
-		<?php
-		//RURIEPE 3/08/2016 - CONDICIONAL PARA INDICAR QUE EL RESUMEN ES DE PROCESADOS O NO PROCESADOS
-		if($_REQUEST['procesado'] == '1') { ?>
-		<tr>
-			
-			<td width=150></td>
-			<td width=410>Total Emitidos (Procesados): <?php echo $bemitidos ?> </td>
-			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
-			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
-			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
-		</tr>
-		<?php }else if($_REQUEST['procesado'] == '0') { ?>
-		<tr>
-			<td width=150></td>
-			<td width=420>Total Emitidos (No Procesados): <?php echo $bemitidos ?> </td>
-			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
-			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
-			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
-		</tr>
-		<?php } else if($_REQUEST['procesado'] == '0') { ?>
-			<tr>
-			<td width=150></td>
-			<td width=420>Total Emitidos: <?php echo $bemitidos ?> </td>
-			<td width=300>Nacionales: <?php echo $bnemitidos?> </td>
-			<td width=300>Internacionales: <?php echo $biemitidos ?></td>
-			<td width=300>SOTOS: <?php echo $bsemitidos ?></td>
-		</tr>
-		<?php } ?>
-	</table>
-</h3>
-<?php } ?>
+
+} ?>
 
 <table class="table table-bordered listViewEntriesTable">
 	<thead>
