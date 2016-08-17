@@ -98,7 +98,7 @@ if ($rows>0){
 		<p>".$nombre."</p>
 		<p>Se ha encontrado un Localizador SOTO sin boletos registrados.</p>					
 		<p>Por favor complete su registro:</p>							
-		<p><b>Localizador: </b> <a href='http://registro.tuagencia24.com/index.php?module=Localizador&view=Detail&record=".$id."'>".$loc."</a></p>		
+		<p><b>Localizador: </b> <a href='http://registro.tuagencia24.com/index.php?module=Localizadores&view=Detail&record=".$id."'>".$loc."</a></p>		
 		<BR><BR>
 		<i>
 		Gracias,		

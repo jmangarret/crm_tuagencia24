@@ -65,7 +65,7 @@ include_once ('vtlib/Vtiger/Module.php');
         $fieldInstance2->table = $TABLENAME;
         $fieldInstance2->uitype = 33;
         $fieldInstance2->column = 'accountid';
-        $fieldInstance2->columntype = 'VARCHAR';
+        $fieldInstance2->columntype = 'VARCHAR(255)';
         $fieldInstance2->typeofdata = 'V~M';
         $blockInstance->addField($fieldInstance2);
         //$fieldInstance2->setRelatedModules(Array('Accounts'));
@@ -76,7 +76,7 @@ include_once ('vtlib/Vtiger/Module.php');
         $fieldInstance3->table = $TABLENAME;
         $fieldInstance3->uitype = 19;
         $fieldInstance3->column = 'observacion';
-        $fieldInstance3->columntype = 'VARCHAR';
+        $fieldInstance3->columntype = 'VARCHAR(255)';
         $fieldInstance3->typeofdata = 'V~O';
         $blockInstance->addField($fieldInstance3);
 

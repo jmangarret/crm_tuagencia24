@@ -253,6 +253,10 @@ class Vtiger_Util_Helper {
         $db = PearDatabase::getInstance();
 
         $query = 'SELECT '.$fieldName.' FROM vtiger_'.$fieldName.' order by sortorderid';
+        //jmangarret 18ago2016 valores picklist 15, 16, 33 para cuentas satelites
+        if ($fieldName=="accountid") 
+        $query = 'SELECT accountname as accountid FROM vtiger_account WHERE account_type=\'Satelite\'';
+    
         $values = array();
         $result = $db->pquery($query, array());
         $num_rows = $db->num_rows($result);
