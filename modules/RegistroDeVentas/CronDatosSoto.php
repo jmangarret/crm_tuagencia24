@@ -1,14 +1,17 @@
 <?php
-include("../../config.inc.php");
-include("../../include/PHPMailer/class.phpmailer2.php");
-include("../../include/PHPMailer/enviar_email_cron.php");
+//include('../../config.inc.php');
+//include('../../include/PHPMailer/class.phpmailer2.php');
+//include('../../include/PHPMailer/enviar_email_cron.php');
+include('/var/www/vhosts/registro.tuagencia24.com/vtigercrm/config.inc.php');
+include('/var/www/vhosts/registro.tuagencia24.com/vtigercrm/include/PHPMailer/class.phpmailer2.php');
+include('/var/www/vhosts/registro.tuagencia24.com/vtigercrm/include/PHPMailer/enviar_email_cron.php');
 $user=$dbconfig['db_username'];
 $pass=$dbconfig['db_password'];
 $bd=$dbconfig['db_name'];
-mysql_connect("localhost",$user,$pass);
+mysql_connect('localhost',$user,$pass);
 mysql_select_db($bd);
 //LOC 17118 PROD 21238
-$apartirde=17118;
+$apartirde=21238;
 
 //SQL PARA VENTAS SIN LOCALIZADORES
 $sql="	SELECT e.crmid,r.registrodeventasname,e.smownerid				
@@ -53,7 +56,10 @@ if ($rows>0){
 		</i>
 		</body> 
 		</html> "; 		
-		$envio=enviarEmail($email,$asunto,$mensaje);					
+		$envio=enviarEmail($email,$asunto,$mensaje);	
+		if ($envio){
+			echo "<p>Correo enviado a ".$user.", Venta sin LOC ".$venta;
+		}
 
 	}
 }
@@ -101,6 +107,9 @@ if ($rows>0){
 		</body> 
 		</html> "; 		
 		$envio=enviarEmail($email,$asunto,$mensaje);	
+		if ($envio){
+			echo "<p>Correo enviado a ".$user.", LOC sin Boleto ".$loc;
+		}
 
 	}
 }
@@ -110,7 +119,7 @@ $sql="	SELECT e.crmid,b.localizadorid,b.boleto1,e.smownerid, l.localizador
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_boletos AS b ON b.boletosid=e.crmid 	
 		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=b.localizadorid			
-		WHERE LENGTH(boleto1) <14 AND e.deleted = 0 AND e.crmid>$apartirde 
+		WHERE LENGTH(boleto1) <13 AND e.deleted = 0 AND e.crmid>$apartirde 
 		";
 $result = mysql_query($sql);	
 $rows = mysql_num_rows($result);
@@ -145,6 +154,9 @@ if ($rows>0){
 		</body> 
 		</html> "; 		
 		$envio=enviarEmail($email,$asunto,$mensaje);	
+		if ($envio){
+			echo "<p>Correo enviado a ".$user.", Boleto Incompleto ".$loc;
+		}
 	}
 }
 ?>

@@ -6,10 +6,11 @@
 //This should be done in your php.ini, but this is how to do it if you don't have access to that
 //date_default_timezone_set('Etc/UTC');
 //function enviarEmail($email,$subject,$body){
+require 'PHPMailerAutoload.php';
 function enviarEmail($email,$asunto,$mensaje){
 	global $log, $adb;
 	
-	require 'PHPMailerAutoload.php';
+//	require 'PHPMailerAutoload.php';
 /*
 	$sqlSystem="select * from vtiger_systems where server_type='email'";
 	$resultSystem = $adb->pquery($sqlSystem, array());
