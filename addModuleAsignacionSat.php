@@ -129,8 +129,8 @@ include_once ('vtlib/Vtiger/Module.php');
         $filter1->name = 'All';
         $filter1->isdefault = true;
         $moduleInstance->addFilter($filter1);
-        $filter1->  addField($mfield1)->
-                    addField($fieldInstance2, 1)->                    
+        $filter1->  addField($fieldInstance2)->                    
+                    addField($mfield1, 1)->
                     addField($mfield2, 2)->
                     addField($mfield3, 3); //campos que se agregaran al filtro
 
