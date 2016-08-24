@@ -9,18 +9,30 @@ include("librerias.php");
 </head>
 <body>	
 	<div id="container">
-	<table border=1>
+	<table align="center">
 	<form>
-		<tr><td><b>Fecha: </b><td><input id="date1" type="text" name="desde">
+		<tr class="listViewHeaders">
+			<th><b>Asesor(a): </b><th><select id="asesor" name="asesor"><option value="">--Todos--</option></select>
+		<tr class="listViewHeaders">
+			<th><b>Fecha: </b><th><input id="date1" type="text" name="desde">
 		
-		<tr><th colspan="2">
-			<input type="submit" Value="Consultar" id="submit"> 
+		<tr ><th colspan="2">
+			<input type="button" Value="Consultar" id="submit"> 
 			
  			<script type="text/javascript">
             $(document).ready(function () {                
                 $('#date1').datepicker({
                     format: "dd/mm/yyyy"
                 });  
+
+              	$.ajax({	
+              		data: '',					
+					url: 'reportes/ostAsesoras.php',
+					type: 'get',
+					success: function(responses){						
+						$("#asesor").append(responses);
+					}
+				});	
             	
                 $('#submit').click(function() {		    		
 		        	$.ajax({
@@ -28,13 +40,12 @@ include("librerias.php");
 					url: "reportes/genTicketsPorStatus.php",
 					type : 'GET',
 					dataType:"html",
-					data: {"desde":$('#date1').val()},
+					data: {"desde":$('#date1').val(), "asesor":$('#asesor').val()},
 					success: function(response){     
-					     $('#genreport').html(response);
+					     $('#resultado').html(response);
 					  	}
 					});									        	      
 	    		});    
-
 
             });
         	</script>

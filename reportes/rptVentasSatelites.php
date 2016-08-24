@@ -67,7 +67,7 @@ include("librerias.php");
 	
 	$sql = "select ticket_number as Ticket, org_name as Satelite, localizador as LOC, gds as GDS, ticket_creado as Fecha, ";
 	$sql.= "paymentmethod as FormaPago, asesor as Asesora, localizador_status as Status_LOC ";
-	$sql.= "from osticket1911.ost_crm where ticket_creado like '%2016%' AND ticket_status_id=3 ";
+	$sql.= "from osticket1911.ost_crm where ticket_status_id=3 ";
 	//POR ORG
 	if ($_REQUEST['org'])
 		$sql.=" AND org_name='".$_REQUEST['org']."' ";
@@ -83,15 +83,15 @@ include("librerias.php");
 	$sql.= "order by ticket_number DESC, org_name DESC ";
 
 	//detectamos cuantos registros son en general para totalizar y calcular
-	$listado= mysql_query($sql,$con2);
+	$listado= mysql_query($sql);
 	$totalRegistros=mysql_num_rows($listado); 
 	//Consultamos los registros reales a mostrar segun la paginacion.	
 
 	$sql.=" limit $init, $totRegPorPag ";
 
-	echo $sql;
+	//echo $sql;
 
-	$res = mysql_query($sql,$con2);
+	$res = mysql_query($sql);
 	$prg->mysql_resource = $res;	
 	$prg->title = "Listado de Ventas";
 	$prg->generateReport();
