@@ -10,11 +10,49 @@
  ********************************************************************************/
 -->*}
 {strip}
+<script>
+$(document).ready(function() {     
+	
+    $('#linkTicketSatelites').click(function() {
+    		$('#report').html("<img src='themes/images/loading.gif'>");
+        	$.ajax({
+			method: "GET",
+			url: "reportes/rptVentasSatelites.php",
+			type : "GET",
+			dataType:"html",
+			data: {},
+			success: function(response){     
+			     $('#report').html(response);
+			  	}
+			});									        	      
+    });    
+
+    $('#linkOsTickets').click(function() {
+    		$('#report').html("<img src='themes/images/loading.gif'>");
+        	$.ajax({
+			method: "GET",
+			url: "reportes/rptTicketsPorStatus.php",
+			type : 'GET',
+			dataType:"html",
+			data: { },
+			success: function(response){     
+			     $('#report').html(response);
+			  	}
+			});									        	      
+    });    
+});
+</script>
 
 <div align="center">	
-	<h3><a href=" http://registro.tuagencia24.com/reportes/rptVentasSatelites.php">Tickets Satelites (Administración)</a></h3>
+	<h3>
+		<!--<a href="#" id="linkTicketSatelites">Tickets Satelites</a> |-->
+		<a href=" http://registro.tuagencia24.com/reportes/rptVentasSatelites.php">Tickets Satelites</a> |
+		<a href="#" id="linkOsTickets">Reporte osTickets</a>
+	</h3>
 </div>
-
+<div id="report" align="center" style="width: 100%;">
+	
+</div>
 <div class="gridster span" style="width: 98%;">
 	<ul>
 	{assign var=COLUMNS value=2}
