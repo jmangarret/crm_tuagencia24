@@ -46,14 +46,11 @@ $(document).ready(function() {
 <div align="center">	
 	<h3>
 		<!--<a href="#" id="linkTicketSatelites">Tickets Satelites</a> |-->
-		<a href=" http://registro.tuagencia24.com/reportes/rptVentasSatelites.php">Tickets Satelites</a> |
+		<a href="reportes/rptVentasSatelites.php">Tickets Satelites</a> |
 		<a href="#" id="linkOsTickets">Reporte osTickets</a>
 	</h3>
 </div>
-<div id="report" align="center" style="width: 100%;">
-	
-</div>
-<div class="gridster span" style="width: 98%;">
+<div id="report" class="gridster span" style="width: 98%;" align="center">
 	<ul>
 	{assign var=COLUMNS value=2}
 	{assign var=ROW value=1}

@@ -2,24 +2,24 @@
 class AsignacionSatelitesHandler extends VTEventHandler {	
     function handleEvent($eventName, $entityData) {  
     	global $log, $adb;
-    	$log->debug("Entering handle event ");
+    	$log->debug("Entering handle event AsignacionSatelitesHandler");
         $moduleName = $entityData->getModuleName();
         if ($moduleName == 'AsignacionSatelites') {  
         	if ($eventName == 'vtiger.entity.aftersave') {          						
         		$esNuevo=$entityData->isNew();
 
 				$accountid=	$_REQUEST["accountid"];
-				$userid=	$_REQUEST["smownerid"];
-				
+				$userid=	$_REQUEST["assigned_user_id"];
+								
 				$ownerModel = Users_Record_Model::getInstanceById($userid, 'Users');
 				$asesor = $ownerModel->get('first_name')." ".$ownerModel->get('last_name');
 				$correo = $ownerModel->get('email1');
-        
-				$exp=explode("|##|", $accountid);
-	            foreach ($exp as $elem) {
+				$telf 	= $ownerModel->get('phone_work');
+
+        		foreach ($accountid as $elem) {
 	            	$names=trim($elem);
 	            	$sqlEmail="SELECT email1 FROM vtiger_account WHERE accountname LIKE '%".$names."%'";
-	            	$qryEmail=$db->pquery($sqlAsig, array());
+	            	$qryEmail=$adb->pquery($sqlEmail, array());
 	            	$row = $adb->fetch_row($qryEmail);
 					$email=$row[0];
 					if ($email){
@@ -35,7 +35,8 @@ class AsignacionSatelitesHandler extends VTEventHandler {
 						<p>Se le ha asignado un(a) Asesor(a) de TuAgencia24:</p>
 						<p><b>Nombre: </b>".$asesor."</p>				
 						<p><b>Email: </b> ".$correo."</p>		
-						<BR><BR><BR>
+						<p><b>Telf. Oficina: </b> ".$telf."</p>		
+						<BR><BR>
 						<i>
 						Saludos,		
 						<p>Equipo TuAgencia24.com</p>

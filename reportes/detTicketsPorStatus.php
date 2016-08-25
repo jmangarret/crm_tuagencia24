@@ -1,4 +1,5 @@
 <?
+include("librerias.php");
 include("conexion.php");
 $options="";		
 $items=$_REQUEST["items"];
@@ -24,24 +25,19 @@ $prg->body_alignment = "left";
 //$prg->body_textcolor = "black";
 $prg->surrounded = '1';
 */
-$f1=date("Y-m");
-if ($_REQUEST['desde']) $f1=fecha_mysql($_REQUEST['desde']);
+$param=explode("::", $_REQUEST["params"]);
+$asesor =$param[0];
+$status =$param[1];
+$f1		=$param[2];
 
-$sql=" SELECT staff_id, 'Abiertos' AS Status,count(*) AS TotalMes  from osticket1911.ost_ticket where created like '%".$f1."%' ";
-if ($_REQUEST['asesor']) $sql.= " AND staff_id=".$_REQUEST['asesor']; 
-$sql.=" GROUP BY staff_id ";
-
-$sql.=" UNION ALL SELECT staff_id, 'Cerrados' AS Status,count(*) AS TotalMes  from osticket1911.ost_ticket where closed like '%".$f1."%' ";
-if ($_REQUEST['asesor']) $sql.= " AND staff_id=".$_REQUEST['asesor'];
-$sql.=" GROUP BY staff_id ";
-
-$sql.=" UNION ALL SELECT staff_id, 'En Progreso' AS Status,count(*) AS TotalMes  from osticket1911.ost_ticket where status_id=7 and updated like '%".$f1."%' ";
-if ($_REQUEST['asesor']) $sql.= " AND staff_id=".$_REQUEST['asesor'];
-$sql.=" GROUP BY staff_id ";
-
-$sql.=" UNION ALL SELECT  staff_id, 'Asignados' AS Status,count(*) AS TotalMes  from osticket1911.ost_ticket_thread where created like '%".$f1."%' and title like '%asignado a%' ";	
-if ($_REQUEST['asesor']) $sql.= " AND staff_id=".$_REQUEST['asesor'];
-$sql.=" GROUP BY staff_id ";
+if ($status=="Abiertos")
+$sql =" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket as ost where created like '%".$f1."%' AND staff_id=".$asesor; 
+if ($status=="Cerrados")
+$sql=" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket where closed like '%".$f1."%' AND staff_id=".$asesor; 
+if ($status=="En Progreso")
+$sql=" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket where status_id=7 and updated like '%".$f1."%' AND staff_id=".$asesor; 
+if ($status=="Asignados")
+$sql=" SELECT tk.number, tk.topic_id, tk.created, tk.updated from osticket1911.ost_ticket_thread as tt inner join osticket1911.ost_ticket as tk where tt.created like '%".$f1."%' and tt.title like '%asignado a%' AND tt.staff_id=".$asesor; 
 
 
 //$sql.= "order by ticket_number DESC, org_name DESC ";
@@ -63,44 +59,48 @@ $prg->title = "Reporte osTickets por Status";
 $prg->generateReport();
 */
 //include("paginar.php");
+$query = "SELECT CONCAT(firstname,' ',lastname) FROM osticket1911.ost_staff WHERE staff_id=".$asesor;
+$result=mysql_query($query);
+$asesor=mysql_fetch_row($result);
 
+			
 ?>
 <div id="resultado">
-<h3>Mostrando resultados para la fecha <?php echo $f1; ?></h3>
+<h3><?php echo $asesor[0]; ?> - Tickets <?php echo $status; ?> para la fecha <?php echo $f1; ?></h3>
 <table width="60%" align=center class="table table-bordered table-hover">
 	<thead>
 		<tr class="listViewHeaders"> 
-			<th><b>Asesor</b></th>
-			<th><b>Status</b></th>
-			<th><b>Total</b></th>
-			<th><b>Detalle</b></th>
+			<th><b>Ticket</b></th>
+			<th><b>Tema</b></th>
+			<th><b>Creado</b></th>
+			<th><b>Actualizado</b></th>
+			<th><b>Abrir Ticket</b></th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-		$i=0;
 		$listado = mysql_query($sql);
 		while($reg= mysql_fetch_row($listado))
 		{
-			$i++;
-			$query = "SELECT CONCAT(firstname,' ',lastname) FROM osticket1911.ost_staff WHERE staff_id=".$reg[0];
+			$query = "SELECT topic FROM osticket1911.ost_help_topic WHERE topic_id=".$reg[1];
 			$result=mysql_query($query);
-			$asesor=mysql_fetch_row($result);
+			$topic=mysql_fetch_row($result);
+
 			echo "<tr>";
-			echo "<td>".$asesor[0]."</td>";
-			echo "<td>".$reg[1]."</td>";
-			echo "<td nowrap>".$reg[2]."</td>";
+			echo "<td>".$reg[0]."</td>";
+			echo "<td>".$topic[0]."</td>";
+			echo "<td>".$reg[2]."</td>";
+			echo "<td>".$reg[3]."</td>";
 			echo "<td>";
-			$params=$reg[0]."::".$reg[1]."::".$f1;
 			echo "<span class='actionImages'>
-					<a href='#' onclick='javascript:window.open(\"reportes/detTicketsPorStatus.php?params=".$params."\",1, \"type=fullWindow,fullscreen,scrollbars=yes,locationbar=yes\")' >
-						<i title='Ver Detalles' class='icon-th-list alignMiddle'></i>
+					<a target=_parent href='http://ticket.tuagencia24.com/upload/scp/tickets.php?id=".$reg[0]."'>
+						<i title='Ver Ticket' class='icon-th-list alignMiddle'></i>
 					</a>
-				  </span>";
+				</span>";
+			echo "";
 			echo "</td>";
 			echo "</tr>";
-
-
+			
 		}
 		?>
 	<tbody>
