@@ -1,5 +1,5 @@
 <?php
-class AsignacionSatelitesHandler extends VTEventHandler {
+class AsignacionSatelitesHandler extends VTEventHandler {	
     function handleEvent($eventName, $entityData) {  
     	global $log, $adb;
     	$log->debug("Entering handle event ");
