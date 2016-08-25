@@ -93,7 +93,7 @@ $prg->generateReport();
 			echo "<td>";
 			$params=$reg[0]."::".$reg[1]."::".$f1;
 			echo "<span class='actionImages'>
-					<a href='#' onclick='javascript:window.open(\"reportes/detTicketsPorStatus.php?params=".$params."\",1, \"type=fullWindow,fullscreen,scrollbars=yes,locationbar=yes\")' >
+					<a href='#' onclick='javascript:window.open(\"reportes/detTicketsPorStatus.php?params=".$params."\",1, \"type=fullWindow,fullscreen,scrollbars=yes,toolbar=yes\")' >
 						<i title='Ver Detalles' class='icon-th-list alignMiddle'></i>
 					</a>
 				  </span>";

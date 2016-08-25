@@ -12,6 +12,8 @@ include("librerias.php");
 	<table align="center">
 	<form>
 		<tr class="listViewHeaders">
+			<th><b>Tipo de Solicitud: </b><th><select id="solicitud" name="solicitud"><option value="">--Todos--</option></select>
+		<tr class="listViewHeaders">
 			<th><b>Asesor(a): </b><th><select id="asesor" name="asesor"><option value="">--Todos--</option></select>
 		<tr class="listViewHeaders">
 			<th><b>Fecha: </b><th><input id="date1" type="text" name="desde">
@@ -31,6 +33,15 @@ include("librerias.php");
 					type: 'get',
 					success: function(responses){						
 						$("#asesor").append(responses);
+					}
+				});	
+            	
+            	$.ajax({	
+              		data: '',					
+					url: 'reportes/ostSolicitudes.php',
+					type: 'get',
+					success: function(responses){						
+						$("#solicitud").append(responses);
 					}
 				});	
             	

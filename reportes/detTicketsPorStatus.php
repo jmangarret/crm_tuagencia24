@@ -31,13 +31,13 @@ $status =$param[1];
 $f1		=$param[2];
 
 if ($status=="Abiertos")
-$sql =" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket as ost where created like '%".$f1."%' AND staff_id=".$asesor; 
+$sql =" SELECT ost.number, topic_id, created, updated, ost.ticket_id from osticket1911.ost_ticket as ost where created like '%".$f1."%' AND staff_id=".$asesor; 
 if ($status=="Cerrados")
-$sql=" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket where closed like '%".$f1."%' AND staff_id=".$asesor; 
+$sql=" SELECT ost.number, topic_id, created, updated, ost.ticket_id from osticket1911.ost_ticket where closed like '%".$f1."%' AND staff_id=".$asesor; 
 if ($status=="En Progreso")
-$sql=" SELECT ost.number, topic_id, created, updated from osticket1911.ost_ticket where status_id=7 and updated like '%".$f1."%' AND staff_id=".$asesor; 
+$sql=" SELECT ost.number, topic_id, created, updated, ost.ticket_id from osticket1911.ost_ticket where status_id=7 and updated like '%".$f1."%' AND staff_id=".$asesor; 
 if ($status=="Asignados")
-$sql=" SELECT tk.number, tk.topic_id, tk.created, tk.updated from osticket1911.ost_ticket_thread as tt inner join osticket1911.ost_ticket as tk where tt.created like '%".$f1."%' and tt.title like '%asignado a%' AND tt.staff_id=".$asesor; 
+$sql=" SELECT tk.number, tk.topic_id, tk.created, tk.updated, tk.ticket_id from osticket1911.ost_ticket_thread as tt inner join osticket1911.ost_ticket as tk where tt.created like '%".$f1."%' and tt.title like '%asignado a%' AND tt.staff_id=".$asesor; 
 
 
 //$sql.= "order by ticket_number DESC, org_name DESC ";
@@ -93,7 +93,7 @@ $asesor=mysql_fetch_row($result);
 			echo "<td>".$reg[3]."</td>";
 			echo "<td>";
 			echo "<span class='actionImages'>
-					<a target=_parent href='http://ticket.tuagencia24.com/upload/scp/tickets.php?id=".$reg[0]."'>
+					<a target='_parent' href='http://ticket.tuagencia24.com/upload/scp/tickets.php?id=".$reg[4]."'>
 						<i title='Ver Ticket' class='icon-th-list alignMiddle'></i>
 					</a>
 				</span>";
