@@ -51,7 +51,7 @@ include("librerias.php");
 					url: "reportes/genTicketsPorStatus.php",
 					type : 'GET',
 					dataType:"html",
-					data: {"desde":$('#date1').val(), "asesor":$('#asesor').val()},
+					data: {"desde":$('#date1').val(), "asesor":$('#asesor').val(), "solicitud":$('#solicitud').val()},
 					success: function(response){     
 					     $('#resultado').html(response);
 					  	}
