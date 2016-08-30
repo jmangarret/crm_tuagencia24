@@ -12,18 +12,21 @@ include("librerias.php");
 	<table align="center">
 	<form>
 		<tr class="listViewHeaders">
-			<th><b>Tipo de Solicitud: </b><th><select id="solicitud" name="solicitud"><option value="">--Todos--</option></select>
-		<tr class="listViewHeaders">
 			<th><b>Asesor(a): </b><th><select id="asesor" name="asesor"><option value="">--Todos--</option></select>
+			<th><b>Tipo de Solicitud: </b><th><select id="solicitud" name="solicitud"><option value="">--Todos--</option></select>			
 		<tr class="listViewHeaders">
-			<th><b>Fecha: </b><th><input id="date1" type="text" name="desde">
+			<th><b>Desde: </b><th><input id="date1" type="text" name="desde">
+			<th><b>Hasta: </b><th><input id="date2" type="text" name="hasta">
 		
-		<tr ><th colspan="2">
+		<tr ><th colspan="4">
 			<input type="button" Value="Consultar" id="submit"> 
 			
  			<script type="text/javascript">
             $(document).ready(function () {                
                 $('#date1').datepicker({
+                    format: "dd/mm/yyyy"
+                });  
+				$('#date2').datepicker({
                     format: "dd/mm/yyyy"
                 });  
 
@@ -51,7 +54,7 @@ include("librerias.php");
 					url: "reportes/genTicketsPorStatus.php",
 					type : 'GET',
 					dataType:"html",
-					data: {"desde":$('#date1').val(), "asesor":$('#asesor').val(), "solicitud":$('#solicitud').val()},
+					data: {"desde":$('#date1').val(), "hasta":$('#date2').val(), "asesor":$('#asesor').val(), "solicitud":$('#solicitud').val()},
 					success: function(response){     
 					     $('#resultado').html(response);
 					  	}
