@@ -10,6 +10,30 @@ if ($_REQUEST['desde']) 	$f1=fecha_mysql($_REQUEST['desde'])." 00:00";
 if ($_REQUEST['hasta']) 	$f2=fecha_mysql($_REQUEST['hasta'])." 23:59";
 if ($_REQUEST['solicitud']) $solic=$_REQUEST['solicitud'];
 
+
+$sql="
+-- AGRUPADO
+SELECT tk.staff_id, CONCAT(firstname,' ',lastname) as name, status_id, ts.name as status,  count(*) AS Total 
+FROM  osticket1911.ost_staff as st 
+	INNER JOIN osticket1911.ost_ticket AS tk ON tk.staff_id=st.staff_id
+	INNER JOIN osticket1911.ost_ticket_status as ts ON tk.status_id=ts.id	
+WHERE tk.created between '2016-08-29 00:00' AND '2016-08-31 23:59' 
+GROUP BY staff_id, status_id
+ORDER BY status_id
+";
+
+
+$sql=" 
+--DETALLADO
+SELECT tk.number, tk.staff_id, CONCAT(firstname,' ',lastname) as name, status_id, ts.name as status, tk.created
+FROM  osticket1911.ost_staff as st 
+	INNER JOIN osticket1911.ost_ticket AS tk ON tk.staff_id=st.staff_id
+	INNER JOIN osticket1911.ost_ticket_status as ts ON tk.status_id=ts.id	
+WHERE tk.created between '2016-08-29 00:00' AND '2016-08-31 23:59' 
+ORDER BY tk.staff_id, tk.created
+
+";
+
 //ABIERTOS
 $sql=" SELECT staff_id, 'Abiertos' AS Status,count(*) AS TotalMes  from osticket1911.ost_ticket as tk ";
 if ($_REQUEST['solicitud']) $sql.=" INNER JOIN osticket1911.ost_ticket__cdata as td ON tk.ticket_id=td.ticket_id ";
