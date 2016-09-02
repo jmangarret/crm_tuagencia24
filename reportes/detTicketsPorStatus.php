@@ -7,8 +7,9 @@ $asesor =$param[0];
 $status =$param[1];
 $f1		=$param[2];
 $f2		=$param[3];
-$solic	=$param[4];
-
+$acum	=$param[4];
+$solic	=$param[5];
+/*
 if ($status=="Abiertos"){
 	$sql =" SELECT tk.number, topic_id, created, updated, tk.ticket_id from osticket1911.ost_ticket as tk 
 			WHERE created between '".$f1."' AND '".$f2."' AND staff_id=".$asesor; 	
@@ -51,6 +52,39 @@ if ($status=="Asignados"){
 				AND td.subject='".$solic."'";  	
 	}	
 }
+*/
+
+//NUEVO SQL CONJUNTO CREADOS DETALLADO
+$sql="SELECT tk.number, tk.topic_id, tk.created, tk.updated, tk.ticket_id, ts.name
+		FROM  osticket1911.ost_staff as st 
+		INNER JOIN osticket1911.ost_ticket AS tk ON tk.staff_id=st.staff_id
+		INNER JOIN osticket1911.ost_ticket_status as ts ON tk.status_id=ts.id ";
+if ($solic) 
+$sql.=" INNER JOIN osticket1911.ost_ticket__cdata as td ON tk.ticket_id=td.ticket_id ";
+if ($acum)
+$sql.=" WHERE tk.staff_id=".$asesor. " AND ts.name='".$status."'";
+else
+$sql.=" WHERE tk.created between '".$f1."' AND '".$f2."' AND tk.staff_id=".$asesor. " AND ts.name='".$status."'";
+if ($solic) 
+$sql.=" AND td.subject = '".$solic."'"; 
+$sql.=" ORDER BY tk.created";
+
+if ($status=='Creados'){
+$sql="SELECT tk.number, tk.topic_id, tk.created, tk.updated, tk.ticket_id, ts.name
+		FROM  osticket1911.ost_staff as st 
+		INNER JOIN osticket1911.ost_ticket AS tk ON tk.staff_id=st.staff_id
+		INNER JOIN osticket1911.ost_ticket_status as ts ON tk.status_id=ts.id ";
+if ($solic) 
+$sql.=" INNER JOIN osticket1911.ost_ticket__cdata as td ON tk.ticket_id=td.ticket_id ";
+if ($acum)
+$sql.=" WHERE tk.staff_id=".$asesor;
+else
+$sql.=" WHERE tk.created between '".$f1."' AND '".$f2."' AND tk.staff_id=".$asesor;
+if ($solic) 
+$sql.= " AND td.subject = '".$solic."'"; 
+$sql.=" ORDER BY tk.created";
+
+}
 
 //echo $sql;
 
@@ -60,7 +94,14 @@ $asesor=mysql_fetch_row($result);
 			
 ?>
 <div id="resultado">
-<h3><?php echo $asesor[0]; ?> - Tickets <?php echo $status; ?> desde <?php echo $f1; ?> hasta <?php echo $f2; ?></h3>
+<h3><?php echo $asesor[0]; ?> - Tickets <?php echo $status; ?> desde <?php echo $f1; ?> hasta <?php echo $f2; ?>
+<?php
+$param=str_replace("::0::", "::1::", $_REQUEST["params"]);
+?>
+<a href="detTicketsPorStatus.php?params=<?php echo $param; ?>">
+	<i title='Ver Acumulado'>Ver Acumulado</i>
+</a>
+</h3>
 <table width="60%" align=center class="table table-bordered table-hover">
 	<thead>
 		<tr class="listViewHeaders"> 
@@ -80,11 +121,11 @@ $asesor=mysql_fetch_row($result);
 		{
 			$query = "SELECT topic FROM osticket1911.ost_help_topic WHERE topic_id=".$reg[1];
 			$result=mysql_query($query);
-			$topic=mysql_fetch_row($result);
+			$top=mysql_fetch_row($result);
 			echo "<tr>";
 			echo "<td>".$item."</td>";
 			echo "<td>".$reg[0]."</td>";
-			echo "<td>".$topic[0]."</td>";
+			echo "<td>".$top[0]."</td>";
 			echo "<td>".$reg[2]."</td>";
 			echo "<td>".$reg[3]."</td>";
 			echo "<td>";
