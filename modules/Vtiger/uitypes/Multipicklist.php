@@ -27,6 +27,7 @@ class Vtiger_Multipicklist_UIType extends Vtiger_Base_UIType {
         if(is_array($value)){
             $value = implode(' |##| ', $value);
         }
+        //jmangarret 05sept2016 se agrega salto de linea para mostrar valores en forma de lista.
 		return str_ireplace(' |##| ', ', <br>', $value);
 	}
     

@@ -17,8 +17,7 @@ function enviarEmail($email,$asunto,$mensaje){
 	$mailFrom=$rowSystem["from_email_field"];
 	$mailPass=$rowSystem["server_password"];
 	$mailUser=$rowSystem["server_username"];	
-	
-	
+		
 	//Create a new PHPMailer instance
 	$mail = new PHPMailer2;
 	//Tell PHPMailer to use SMTP

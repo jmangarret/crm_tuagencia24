@@ -210,7 +210,7 @@ class Vtiger_Field_Model extends Vtiger_Field {
 	}
 
     public function isRoleBased() {
-        //jmangarret 18ago2016 se quita uitype 33 para isRoleBased
+        //jmangarret 18ago2016 se quita uitype 33 para isRoleBased, nueva linea
         //if($this->get('uitype') == '15' || $this->get('uitype') == '33' || ($this->get('uitype') == '55' && $this->getFieldName() == 'salutationtype')) {    	
         if($this->get('uitype') == '15' || ($this->get('uitype') == '55' && $this->getFieldName() == 'salutationtype')) {
             return true;

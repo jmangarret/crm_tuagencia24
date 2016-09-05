@@ -272,7 +272,7 @@ class Vtiger_Util_Helper {
         	if (!$_REQUEST["record"])
         	$query.=' AND accountname NOT IN ('.$names.')';	
         } 
-            
+        //Fin 18ago2015   
         $values = array();
         $result = $db->pquery($query, array());
         $num_rows = $db->num_rows($result);
