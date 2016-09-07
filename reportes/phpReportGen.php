@@ -79,7 +79,7 @@ class phpReportGenerator
 		
 		echo "<b><i>".$this->header."</i></b>";
 		echo "<P></P>";
-		
+		echo "<div id='genreport'>";
 		//Check If our table has to be surrounded by an additional table
 		//which increase style of this table
 		if ($this->surrounded == true) 
@@ -114,7 +114,7 @@ class phpReportGenerator
 			echo "</td></tr></table>";
 
 		
-		
+		echo "</div";
 	}
 }
 

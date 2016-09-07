@@ -50,12 +50,14 @@ class ComisionSatelites extends Vtiger_CRMEntity {
 	var $list_link_field = 'tipodecomisionid';
 
 	// For Popup listview and UI type support
-	var $search_fields = Array(		
+	var $search_fields = Array(			
+		'LBL_ACCOUNTID' => array('comisionsatelites', 'accountid'),		
 		'LBL_TIPODECOMISIONID' => array('comisionsatelites', 'tipodecomisionid'),		
 		'LBL_TIPODEFORMULA' => array('comisionsatelites', 'tipodeformula'),
 		'LBL_BASE' => array('comisionsatelites', 'base'),
 	);
 	var $search_fields_name = Array (		
+		'LBL_ACCOUNTID' => 'accountid',		
 		'LBL_TIPODECOMISIONID' => 'tipodecomisionid',		
 		'LBL_TIPODEFORMULA' => 'tipodeformula',
 		'LBL_BASE' => 'base',

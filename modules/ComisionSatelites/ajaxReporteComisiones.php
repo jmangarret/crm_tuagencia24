@@ -56,7 +56,7 @@
 		if ($_REQUEST["satelite"]!="" AND $_REQUEST["tcomision"]!="")
 		{
 
-			$query="SELECT cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
+			$query="SELECT comisionsatelitesid,cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
 			FROM vtiger_comisionsatelites AS cs
 			INNER JOIN vtiger_account AS acc ON acc.accountid = cs.accountid
 			INNER JOIN vtiger_tiposdecomisiones AS tc ON tc.tiposdecomisionesid = cs.tipodecomisionid 
@@ -64,7 +64,7 @@
 		}
 		else if ($_REQUEST["tcomision"]!="")
 		{
-			$query="SELECT cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
+			$query="SELECT comisionsatelitesid,cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
 			FROM vtiger_comisionsatelites AS cs
 			INNER JOIN vtiger_account AS acc ON acc.accountid = cs.accountid
 			INNER JOIN vtiger_tiposdecomisiones AS tc ON tc.tiposdecomisionesid = cs.tipodecomisionid 
@@ -73,7 +73,7 @@
 		}
 		else if ($_REQUEST["satelite"]!="")
 		{
-			$query="SELECT cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
+			$query="SELECT comisionsatelitesid,cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
 			FROM vtiger_comisionsatelites AS cs
 			INNER JOIN vtiger_account AS acc ON acc.accountid = cs.accountid
 			INNER JOIN vtiger_tiposdecomisiones AS tc ON tc.tiposdecomisionesid = cs.tipodecomisionid 
@@ -82,7 +82,7 @@
 		}
 		else 
 		{
-			$query="SELECT cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
+			$query="SELECT comisionsatelitesid,cs.tipodeformula,cs.base,cs.activa,acc.accountname,tc.nombre
 			FROM vtiger_comisionsatelites AS cs
 			INNER JOIN vtiger_account AS acc ON acc.accountid = cs.accountid
 			INNER JOIN vtiger_tiposdecomisiones AS tc ON tc.tiposdecomisionesid = cs.tipodecomisionid";
@@ -135,7 +135,7 @@ if($filtro = mysql_query($query))
 		        	
 ?>
 
-	<tr class="listViewEntries" data-id='<?=$row["comisionsatelitesid"]?>' data-recordUrl='index.php?module=Localizadores&view=Detail&record=<?=$row["comisionsatelitesid"]?>' id="Localizadores_listView_row_1">
+	<tr class="listViewEntries" data-id='<?=$row["comisionsatelitesid"]?>' data-recordUrl='index.php?module=ComisionSatelites&view=Detail&record=<?=$row["comisionsatelitesid"]?>' id="ComisionSatelitess_listView_row_1">
 
 	<!--Check para cada fila-->
 	<td  width="5%" class="wide">
@@ -164,11 +164,11 @@ if($filtro = mysql_query($query))
 	<td nowrap class="wide">
 		<div class="actions pull-right">
 			<span class="actionImages">
-				<a href="index.php?module=ComisionSatelite&view=Detail&record=<?=$row["comisionsatelitesid"]?>&mode=showDetailViewByMode&requestMode=full">
+				<a href="index.php?module=ComisionSatelites&view=Detail&record=<?=$row["comisionsatelitesid"]?>&mode=showDetailViewByMode&requestMode=full">
 					<i title="Complete Details" class="icon-th-list alignMiddle"></i>
 				</a>&nbsp;
 
-				<a href='index.php?module=ComisionSatelite&view=Edit&record=<?=$row["comisionsatelitesid"]?>'>
+				<a href='index.php?module=ComisionSatelites&view=Edit&record=<?=$row["comisionsatelitesid"]?>'>
 					<i title="Editar" class="icon-pencil alignMiddle"></i>
 				</a>
 			</span>

@@ -10,6 +10,8 @@ require 'PHPMailerAutoload.php';
 function enviarEmail($email,$asunto,$mensaje){
 	global $log, $adb;
 	
+//	require 'PHPMailerAutoload.php';
+/*
 	$sqlSystem="select * from vtiger_systems where server_type='email'";
 	$resultSystem = $adb->pquery($sqlSystem, array());
 	$rowSystem=$row = $adb->fetchByAssoc($resultSystem);
@@ -17,7 +19,11 @@ function enviarEmail($email,$asunto,$mensaje){
 	$mailFrom=$rowSystem["from_email_field"];
 	$mailPass=$rowSystem["server_password"];
 	$mailUser=$rowSystem["server_username"];	
-		
+*/	
+	$mailFrom="info@tuagencia24.com";
+	$mailPass="AUDEtuagencia24";
+	$mailUser="info@tuagencia24.com";	
+	
 	//Create a new PHPMailer instance
 	$mail = new PHPMailer2;
 	//Tell PHPMailer to use SMTP
@@ -52,7 +58,7 @@ function enviarEmail($email,$asunto,$mensaje){
 	//Set the subject line 
 	$mail->Subject = $asunto;
 	//Read an HTML message body from an external file, convert referenced images to embedded,
-	$log->debug("cuerpo html: ".$mensaje);
+	//$log->debug("cuerpo html: ".$mensaje);
 	
 	$mail->msgHTML($mensaje);
 	//Replace the plain text body with one created manually
@@ -62,7 +68,7 @@ function enviarEmail($email,$asunto,$mensaje){
 	//send the message, check for errors
 	$enviar_mail=$mail->send();
 	if (!$enviar_mail) {
-		$log->debug ("Mailer Error: $mailFrom $mailUser $mailPass" . $mail->ErrorInfo);
+		//$log->debug ("Mailer Error: $mailFrom $mailUser $mailPass" . $mail->ErrorInfo);
 		return false;
 	}else{
 		return true;

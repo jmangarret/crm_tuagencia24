@@ -78,6 +78,7 @@ include("librerias.php");
 		$sql.= "and CAST(ticket_creado AS DATE)>= '".$f1."' AND CAST(ticket_creado AS DATE)<='".$f2."' ";	
 		echo "<div align=center><strong>Mostrando: ".$_REQUEST['org']." Desde el ".$_REQUEST['desde']." Hasta el ".$_REQUEST['hasta']."</strong></div>";
 	}else{
+		$sql.=" AND ticket_id>10530 ";
 		echo "<div align=center><strong>Mostrando: ".$_REQUEST['org']." Todos los Registros...</strong></div>";
 	}	
 	$sql.= "order by ticket_number DESC, org_name DESC ";
