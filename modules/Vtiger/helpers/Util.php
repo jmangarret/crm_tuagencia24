@@ -268,7 +268,7 @@ class Vtiger_Util_Helper {
 	            }	            
 	        }
 	        $names.="''";
-        	$query = 'SELECT accountname as accountid FROM vtiger_account WHERE account_type=\'Satelite\' ';
+        	$query = 'SELECT accountname as accountid FROM vtiger_account WHERE account_type=\'Satelite\' OR account_type=\'Freelance\'';
         	if (!$_REQUEST["record"])
         	$query.=' AND accountname NOT IN ('.$names.')';	
         } 

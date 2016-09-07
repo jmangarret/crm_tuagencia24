@@ -16,6 +16,8 @@
  *  Author       : JPL TSolucio, S. L. Joe Bordes
  ************************************************************************************/
 $languageStrings = array(
+	'SINGLE_AsignacionSatelites' => 'AsignacionSatelites',
+	'LBL_ASIGNACION_INFORMATION' => 'Información General',
 	'LBL_AGENCIA' => 'AGENCIA',//MENU AGENCIA
 	'APPTITLE'                     => 'vtiger CRM',
 	'POWEREDBY'                    => 'Powered by vtiger CRM',
