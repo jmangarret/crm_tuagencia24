@@ -40,6 +40,22 @@ $(document).ready(function() {
 			  	}
 			});									        	      
     });    
+
+    $('#linkProximosVuelos').click(function() {
+    		$('#report').html("<img src='themes/images/loading.gif'>");
+        	$.ajax({
+			method: "GET",
+			url: "reportes/rptProximosVuelos.php",
+			type : 'GET',
+			dataType:"html",
+			data: { },
+			success: function(response){     
+			     $('#report').html(response);
+			  	}
+			});									        	      
+    });  
+
+
 });
 </script>
 
@@ -47,7 +63,8 @@ $(document).ready(function() {
 	<h3>
 		<!--<a href="#" id="linkTicketSatelites">Tickets Satelites</a> |-->
 		<a href="reportes/rptVentasSatelites.php">Tickets Satelites</a> |
-		<a href="#" id="linkOsTickets">Reporte osTickets</a>
+		<a href="#" id="linkOsTickets">Reporte osTickets</a> |
+		<a href="#" id="linkProximosVuelos">Próximos Vuelos</a>
 	</h3>
 </div>
 <div id="report" class="gridster span" style="width: 98%;" align="center">

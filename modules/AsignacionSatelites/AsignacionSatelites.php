@@ -7,7 +7,7 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-ini_set('display_errors', '1');
+//ini_set('display_errors', '1');
 include_once 'modules/Vtiger/CRMEntity.php';
 
 class AsignacionSatelites extends Vtiger_CRMEntity {
@@ -104,5 +104,4 @@ class AsignacionSatelites extends Vtiger_CRMEntity {
 			// TODO Handle actions after this module is updated.
 		}
  	}
-
 }
