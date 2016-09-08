@@ -105,9 +105,4 @@ class AsignacionSatelites extends Vtiger_CRMEntity {
 		}
  	}
 
- 	if function_exists('enviarEmail'){
-    echo "Las funciones de enviarEmail están disponibles.";
-} else {
-    echo "Las funciones de enviarEmail no están disponibles.";
-}
 }
