@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors', true);
-ini_set('error_reporting', E_ALL & ~E_NOTICE& ~E_STRICT & ~E_DEPRECATED);
+ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 require_once('vtlib/Vtiger/Module.php');
 include_once('vtlib/Vtiger/Utils.php');
 include_once('vtlib/Vtiger/Menu.php');
