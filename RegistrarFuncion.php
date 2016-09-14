@@ -5,7 +5,7 @@
     require 'modules/com_vtiger_workflow/VTEntityMethodManager.inc';
  
         // Lista de Modulos permitidos para agregar Funciones Personalizadas
-    $modulesAllowed = array('SalesOrder', 'Invoice', 'RegistroDePagos', 'Documents', 'Calendar', 'Contacts', 'Accounts');
+    $modulesAllowed = array('SalesOrder', 'Invoice', 'RegistroDePagos', 'Documents', 'Calendar', 'Contacts', 'Accounts','Boletos');
  
         // Directorio por default para los Scripts que contienen funciones personalizadas
     $customFunctionDir = 'include/WorkFlowFunctions/';

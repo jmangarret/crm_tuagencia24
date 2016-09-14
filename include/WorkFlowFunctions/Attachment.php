@@ -16,6 +16,11 @@
          *  tomamos la parte que esta a al derecha de la "x" y ese es el correspondiente ID de pedido
          */        
         list($mod,$id)=split("x",$entity->getId());
+        /*
+        echo "<pre>";
+        var_dump($_FILES);
+        die();
+        */
         foreach($_FILES as $fileindex => $files)
         {
             
