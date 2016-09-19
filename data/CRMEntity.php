@@ -124,8 +124,9 @@ class CRMEntity {
 
 		$log->debug("Entering into uploadAndSaveFile($id,$module,".$vard.") method.");
 
-		echo "<pre>";
-		var_dump($file_details);
+		
+		$txtimg=print_r($file_details,true);
+		$log->debug("UPLOAD FILE DETAILS <pre>".$txtimg);
 		//exit;
 
 		$date_var = date("Y-m-d H:i:s");
@@ -144,13 +145,13 @@ class CRMEntity {
 		}
 		
 		
-		if (!$filesize) $file_name=$file_details['original_name'];
+		if (!$filesize) $file_name=$file_details['original_name'][0];
 
 		$binFile = sanitizeUploadFileName($file_name, $upload_badext);
 
 		$current_id = $adb->getUniqueID("vtiger_crmentity");
 
-		$filename = ltrim(basename(" " . $binFile)); //allowed filename like UTF-8 characters
+		
 		$filetype = $file_details['type'][0];
 		$filesize = $file_details['size'][0];
 		$filetmp_name = $file_details['tmp_name'][0];
@@ -158,10 +159,10 @@ class CRMEntity {
 
 
 		if (!$filesize){
-			$filetmp_name = $file_details['tmp_name'];	
-			$filetype = $file_details['type'];
-			$filesize = $file_details['size'];
-			$binFile = sanitizeUploadFileName($file_name, $upload_badext);
+			$filetmp_name = $file_details['tmp_name'][0];	
+			$filetype = $file_details['type'][0];
+			$filesize = $file_details['size'][0];
+			$binFile = sanitizeUploadFileName($file_name, $upload_badext);			
 		}
 		
 
@@ -169,8 +170,12 @@ class CRMEntity {
 		$upload_file_path = decideFilePath();
 
 		//upload the file in server
-		$upload_status = move_uploaded_file($filetmp_name, $upload_file_path . $current_id . "_" . $binFile);
-		//$log->debug("Status de subida: ".$upload_status. " Archivo: ".$filetmp_name. " Path: ".$upload_file_path. " File: ".$binFile);
+		if (!$binFile) $binFile=$file_name;
+		if (!$binFile) $binFile=$file_details['name'][0];
+		$filename = ltrim(basename(" " . $binFile)); //allowed filename like UTF-8 characters
+		$destino=$upload_file_path . $current_id . "_" . $binFile;
+		$upload_status = move_uploaded_file($filetmp_name, $destino);
+		$log->debug("Status de subida: ".$upload_status. " Archivo: ".$filetmp_name. " Path: ".$upload_file_path. " File: ".$binFile);
 		
 		$save_file = 'true';
 		//only images are allowed for these modules
