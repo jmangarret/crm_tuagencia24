@@ -55,8 +55,12 @@ $sql.=" INNER JOIN osticket1911.ost_ticket__cdata as td ON tk.ticket_id=td.ticke
 $sql.=" WHERE tk.created between '".$f1."' AND '".$f2."'";
 if ($_REQUEST['asesor']) 	
 $sql.=" AND tk.staff_id=".$_REQUEST['asesor'];
-if ($_REQUEST['solicitud']) 
-$sql.=" AND td.subject = '".$solic."'"; 
+if ($_REQUEST['solicitud']){
+	if ($_REQUEST['solicitud']==88) 
+		$sql.=" AND (td.subject = '".$solic."' OR td.subject='88,Cotizacion PopPup') "; 
+	else
+		$sql.=" AND td.subject = '".$solic."'"; 
+}
 $sql.=" GROUP BY staff_id ";
 
 $sql.=" UNION ALL SELECT tk.staff_id, CONCAT(firstname,' ',lastname) as name, ts.name as status, count(*) AS Total, status_id 
@@ -68,8 +72,12 @@ $sql.=" INNER JOIN osticket1911.ost_ticket__cdata as td ON tk.ticket_id=td.ticke
 $sql.=" WHERE tk.created between '".$f1."' AND '".$f2."'";
 if ($_REQUEST['asesor']) 	
 $sql.=" AND tk.staff_id=".$_REQUEST['asesor'];
-if ($_REQUEST['solicitud']) 
-$sql.=" AND td.subject = '".$solic."'"; 
+if ($_REQUEST['solicitud']){
+	if ($_REQUEST['solicitud']==88) 
+		$sql.=" AND (td.subject = '".$solic."' OR td.subject='88,Cotizacion PopPup') "; 
+	else
+		$sql.=" AND td.subject = '".$solic."'"; 
+}
 $sql.=" GROUP BY status_id, staff_id";
 
 //echo $sql;
@@ -121,8 +129,12 @@ $sql.=" GROUP BY status_id, staff_id";
 			$sqlAcum.=" WHERE tk.staff_id=".$reg[0];
 			if ($reg[2]<>'Creados')
 			$sqlAcum.=" AND ts.name='".$reg[2]."'";
-			if ($_REQUEST['solicitud']) 
-				$sqlAcum.= " AND td.subject = '".$solic."'"; 
+			if ($_REQUEST['solicitud']){
+				if ($_REQUEST['solicitud']==88) 
+					$sqlAcum.=" AND (td.subject = '".$solic."' OR td.subject='88,Cotizacion PopPup') "; 
+				else
+					$sqlAcum.=" AND td.subject = '".$solic."'"; 
+			}
 			$qryAcum=mysql_query($sqlAcum);
 			$rowAcum=mysql_fetch_row($qryAcum);
 			$acum=$rowAcum[0];
