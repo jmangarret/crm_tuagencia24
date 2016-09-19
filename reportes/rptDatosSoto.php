@@ -37,13 +37,13 @@ $sql.="	SELECT 'Localizadores' AS Modulo, 'Localizador sin Boletos' AS Error, e.
 		)";
 
 
-//SQL PARA VALIDAR NUM. DE DIGITOS DEL BOLETO, DEBE TENER MINIMO 13 CARACTERES
+//SQL PARA VALIDAR NUM. DE DIGITOS DEL BOLETO, DEBE TENER MINIMO 13 CARACTERES O SER MAYOR QUE CERO
 $sql.=" UNION ";
 $sql.="	SELECT 'Boletos' AS Modulo, 'Num. de Boleto Errado' AS Error, e.crmid,b.boleto1 as referencia,e.smownerid
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_boletos AS b ON b.boletosid=e.crmid 	
-		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=b.localizadorid			
-		WHERE LENGTH(boleto1) <13 AND e.deleted = 0 AND e.crmid>$apartirde 
+		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=b.localizadorid					
+		WHERE (LENGTH(boleto1) <13 OR CAST(boleto1 AS UNSIGNED)<1) AND e.deleted = 0 AND e.crmid>$apartirde 		
 		";
 //echo $sql;
 ?>

@@ -114,12 +114,13 @@ if ($rows>0){
 	}
 }
 
-//SQL PARA VALIDAR NUM. DE DIGITOS DEL BOLETO, DEBE TENER MINIMO 13 CARACTERES
+//SQL PARA VALIDAR NUM. DE DIGITOS DEL BOLETO, DEBE TENER MINIMO 13 CARACTERES O SER MAYOR QUE CERO
 $sql="	SELECT e.crmid,b.localizadorid,b.boleto1,e.smownerid, l.localizador				
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_boletos AS b ON b.boletosid=e.crmid 	
 		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=b.localizadorid			
-		WHERE LENGTH(boleto1) <13 AND e.deleted = 0 AND e.crmid>$apartirde 
+		WHERE (LENGTH(boleto1) <13 OR CAST(boleto1 AS UNSIGNED)<1) AND e.deleted = 0 AND e.crmid>$apartirde 
+		AND b.localizadorid NOT IN (SELECT e2.crmid FROM vtiger_crmentity AS e2 WHERE e2.deleted=1)
 		";
 $result = mysql_query($sql);	
 $rows = mysql_num_rows($result);

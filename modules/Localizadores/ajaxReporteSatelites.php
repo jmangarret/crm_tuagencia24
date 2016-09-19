@@ -1,5 +1,5 @@
 <?php
-
+	//jmangarret 19sept2016 se agrego en.deleted=0 a todos los where para no incluir los eliminados en los querys
 	include("../../config.inc.php");
 
 	$user=$dbconfig['db_username'];
@@ -127,7 +127,7 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
+			WHERE en.deleted=0 AND usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -177,7 +177,7 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE usu.id='".$_REQUEST["asesoras"]."' AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
+			WHERE en.deleted=0 AND usu.id='".$_REQUEST["asesoras"]."' AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -220,7 +220,7 @@
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE usu.id=".$_REQUEST["asesoras"]." AND bol.status != 'Anulado'"; 
+			WHERE en.deleted=0 AND usu.id=".$_REQUEST["asesoras"]." AND bol.status != 'Anulado'"; 
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -274,7 +274,7 @@
 			$query.="INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
 
 			$query.="INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE con.isSatelite='1' AND usu.id='".$_REQUEST["asesoras"]."' 
+			WHERE en.deleted=0 AND con.isSatelite='1' AND usu.id='".$_REQUEST["asesoras"]."' 
 			AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
@@ -329,7 +329,7 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado' AND (loc.gds='Servi' OR  loc.gds='Web Aerolinea')";
+			WHERE en.deleted=0 AND usu.id='".$_REQUEST["asesoras"]."' AND bol.status != 'Anulado' AND (loc.gds='Servi' OR  loc.gds='Web Aerolinea')";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -381,7 +381,7 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
+			WHERE en.deleted=0 AND (contactoid IS NULL OR contactoid='') AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -424,7 +424,7 @@
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_contactdetails AS con ON con.contactid = loc.contactoid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE bol.status != 'Anulado'"; 
+			WHERE en.deleted=0 AND bol.status != 'Anulado'"; 
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -479,7 +479,7 @@
 			$query.="INNER JOIN vtiger_account AS acc ON acc.accountid = con.accountid ";
 
 			$query.="INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE con.isSatelite='1' AND bol.status != 'Anulado'";
+			WHERE en.deleted=0 AND con.isSatelite='1' AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -534,7 +534,7 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE bol.status != 'Anulado' AND (loc.gds='Servi' OR loc.gds='Web Aerolinea')";
+			WHERE en.deleted=0 AND bol.status != 'Anulado' AND (loc.gds='Servi' OR loc.gds='Web Aerolinea')";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -588,7 +588,7 @@
 			INNER JOIN vtiger_boletos AS bol ON bol.localizadorid=loc.localizadoresid 
 			INNER JOIN vtiger_crmentity AS en ON en.crmid = loc.localizadoresid
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			WHERE acc.accountid='".$_REQUEST["satelite"]."' AND bol.status != 'Anulado' ";
+			WHERE en.deleted=0 AND acc.accountid='".$_REQUEST["satelite"]."' AND bol.status != 'Anulado' ";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
@@ -640,7 +640,7 @@
 
 			$query.="
 			INNER JOIN vtiger_users AS usu ON usu.id = en.smownerid
-			wHERE bol.status != 'Anulado'";
+			wHERE en.deleted=0 AND bol.status != 'Anulado'";
 
 			if ($_REQUEST["gds"])
 				$query.=" AND loc.gds= '".$_REQUEST["gds"]."' ";
