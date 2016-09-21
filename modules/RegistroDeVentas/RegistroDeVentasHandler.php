@@ -81,13 +81,25 @@ class RegistroDeVentasHandler extends VTEventHandler {
 			*/
 			if (!$totalProductosBs) $totalProductosBs=0;
 			if (!$totalProductosDolares) $totalProductosDolares=0;
-			$sql="UPDATE vtiger_registrodeventas SET totalventabs=totalventabs+?, totalventadolares=totalventadolares+? WHERE registrodeventasid = ?";
-			$result = $adb->pquery($sql, array($totalProductosBs, $totalProductosDolares,  $idVenta));	
+			$sql="UPDATE vtiger_registrodeventas SET 
+					totalventabs		=IF(ISNULL(totalventabs),?,totalventabs+?), 
+					totalventadolares	=IF(ISNULL(totalventadolares),?,totalventadolares+?) 
+					WHERE registrodeventasid = ?";			
+			//$result = $adb->pquery($sql, array($totalProductosBs,$totalProductosBs, $totalProductosDolares,$totalProductosDolares,  $idVenta));	
+
+			//PENDIENTE SUMA BOLETOS, INVOCAR SP SETCRMENTITYREL
+			$sql="UPDATE vtiger_registrodeventas SET 
+					totalventabs		=?, 
+					totalventadolares	=? 
+					WHERE registrodeventasid = ?";
+			$result = $adb->pquery($sql, array($totalProductosBs,$totalProductosDolares,$idVenta));	
 			//$result = $adb->pquery($sql, array($totalBs, $totalDs, $totalBs, $totalDs, $idVenta));	query anterior may2016
 
 			//if ($nprods>0 || $nbols>0){
 			//	RegistroDePagosHandler::updatePagos(0,$idVenta);				
 			//}			
+			
+			//$result = $adb->pquery("CALL setCrmEntityRel('RegistroDeVentas','Localizadores',".$idVenta.",0)", array());	
 			
 			$result = $adb->pquery("CALL totVentasPagadas(?)", array($idVenta));	
 
