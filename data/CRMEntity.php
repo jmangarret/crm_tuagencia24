@@ -1625,7 +1625,7 @@ class CRMEntity {
 				$adb->pquery("INSERT INTO vtiger_crmentityrel(crmid, module, relcrmid, relmodule) VALUES(?,?,?,?)", Array($crmid, $module, $relcrmid, $with_module));
 
 				// jmangarret 09ago2016 Enviar correo si es SOTO
-				if ($module="RegistroDeVentas" && $with_module="Localizadores"){
+				if ($module=="RegistroDeVentas" && $with_module=="Localizadores"){
 					$log->debug("Enviando correo SOTO");
 					$host= $_SERVER["HTTP_HOST"];
 
@@ -1642,23 +1642,7 @@ class CRMEntity {
 					$email="tuagencia.sistemas01@gmail.com";
 					$nombre="Hola,";
 					$asunto="Prueba CRM - Verificar Datos (Reserva de SOTO)";
-					$mensaje = " 
-					<html>
-					<head> 
-					<title>Info - Tu Agencia 24</title> 
-					</head> 
-					<body> 
-					<p>".$nombre."</p>
-					<p>Se ha registrado una Reserva de SOTO para la Verificacion de Datos:</p>					
-					<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$relcrmid."'>".$loc."</a></p>		
-					<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$crmid."'>".$venta."</a></p>		
-					<BR><BR><BR>
-					<i>
-					Gracias,		
-					<p>Equipo TuAgencia24.com</p>
-					</i>
-					</body> 
-					</html> "; 
+					$mensaje=getPlantillaVerficarDatos();
 					//Verificamos si es un SOTO
 					$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE localizadoresid=? AND gds= ?";
 					$result = $adb->pquery($sqlSoto, array($relcrmid,"Servi"));	

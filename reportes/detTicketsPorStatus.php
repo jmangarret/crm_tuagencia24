@@ -65,8 +65,12 @@ if ($acum)
 $sql.=" WHERE tk.staff_id=".$asesor. " AND ts.name='".$status."'";
 else
 $sql.=" WHERE tk.created between '".$f1."' AND '".$f2."' AND tk.staff_id=".$asesor. " AND ts.name='".$status."'";
-if ($solic) 
-$sql.=" AND td.subject = '".$solic."'"; 
+if ($solic){
+	if ($solic==88) 
+		$sql.=" AND (td.subject = '".$solic."' OR td.subject='88,Cotizacion PopPup') "; 
+	else
+		$sql.=" AND td.subject = '".$solic."'"; 
+}
 $sql.=" ORDER BY tk.created";
 
 if ($status=='Creados'){
@@ -80,8 +84,12 @@ if ($acum)
 $sql.=" WHERE tk.staff_id=".$asesor;
 else
 $sql.=" WHERE tk.created between '".$f1."' AND '".$f2."' AND tk.staff_id=".$asesor;
-if ($solic) 
-$sql.= " AND td.subject = '".$solic."'"; 
+if ($solic){
+	if ($solic==88) 
+		$sql.=" AND (td.subject = '".$solic."' OR td.subject='88,Cotizacion PopPup') "; 
+	else
+		$sql.=" AND td.subject = '".$solic."'"; 
+}
 $sql.=" ORDER BY tk.created";
 
 }

@@ -86,12 +86,12 @@ class Vtiger_DashBoard_Model extends Vtiger_Base_Model {
 		$params = array($currentUser->getId(), 'DASHBOARDWIDGET', $moduleModel->getId());
 		$result = $db->pquery($sql, $params);
 
-		//jmangarret mostramos todos los widgets sino tiene ninguno personalizado, quitando filtro userid
+		//jmangarret 19sept2016 mostramos todos los widgets de administrador (userid=1) sino tiene ninguno personalizado, quitando filtro userid
 		$numrows=$db->num_rows($result);
 		if ($numrows==0){
 			$sql = " SELECT vtiger_links.*, vtiger_module_dashboard_widgets.userid, vtiger_module_dashboard_widgets.id as widgetid, vtiger_module_dashboard_widgets.position as position, vtiger_links.linkid as id FROM vtiger_links ".
 				" INNER JOIN vtiger_module_dashboard_widgets ON vtiger_links.linkid=vtiger_module_dashboard_widgets.linkid".
-				" WHERE (linktype = ? AND tabid = ?)";
+				" WHERE (vtiger_module_dashboard_widgets.userid = 1 AND linktype = ? AND tabid = ?)";
 			$params = array('DASHBOARDWIDGET', $moduleModel->getId());
 			$result = $db->pquery($sql, $params);
 		}
