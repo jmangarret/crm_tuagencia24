@@ -7,11 +7,13 @@ class RegistroDePagosHandler extends VTEventHandler {
     	$log->debug("Entering handle event pagos ".$a);
         $moduleName = $entityData->getModuleName();
         if ($moduleName == 'RegistroDePagos') {  
-        	if ($eventName == 'vtiger.entity.aftersave') {          						
-				//$idp=$entityData->getId(); //OBTIENE ID DEL PAGO
+        	if ($eventName == 'vtiger.entity.aftersave') {          										
 				//$idpago=$_REQUEST["record"];
 				//$this->updatePagos($idpago,$idVenta,NULL);
 				$idpago		=$_REQUEST["record"];
+				if ($entityData->isNew()){
+					$idpago=$entityData->getId();
+				}
 				$idVenta=$_REQUEST["registrodeventasid"];
 				$statuspago=$_REQUEST["pagostatus"];
 

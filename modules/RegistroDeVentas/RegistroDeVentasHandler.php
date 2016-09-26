@@ -81,17 +81,20 @@ class RegistroDeVentasHandler extends VTEventHandler {
 			*/
 			if (!$totalProductosBs) $totalProductosBs=0;
 			if (!$totalProductosDolares) $totalProductosDolares=0;
+			/*
 			$sql="UPDATE vtiger_registrodeventas SET 
 					totalventabs		=IF(ISNULL(totalventabs),?,totalventabs+?), 
 					totalventadolares	=IF(ISNULL(totalventadolares),?,totalventadolares+?) 
 					WHERE registrodeventasid = ?";			
-			//$result = $adb->pquery($sql, array($totalProductosBs,$totalProductosBs, $totalProductosDolares,$totalProductosDolares,  $idVenta));	
+			$result = $adb->pquery($sql, array($totalProductosBs,$totalProductosBs, $totalProductosDolares,$totalProductosDolares,  $idVenta));	
+			*/
 
 			//PENDIENTE SUMA BOLETOS, INVOCAR SP SETCRMENTITYREL
 			$sql="UPDATE vtiger_registrodeventas SET 
 					totalventabs		=?, 
 					totalventadolares	=? 
 					WHERE registrodeventasid = ?";
+			if ($totalProductosBs>0 || $totalProductosDolares>0) 
 			$result = $adb->pquery($sql, array($totalProductosBs,$totalProductosDolares,$idVenta));	
 			//$result = $adb->pquery($sql, array($totalBs, $totalDs, $totalBs, $totalDs, $idVenta));	query anterior may2016
 
