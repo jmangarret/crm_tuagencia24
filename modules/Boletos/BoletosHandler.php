@@ -11,14 +11,17 @@ class BoletosHandler extends VTEventHandler {
 				$localizadorid = $entityData->get('localizadorid');
 				if ($checkpassport){
 					//Verificamos si los boletos tienen venta asociada
-					$sqlvta="SELECT registrodeventasid FROM vtiger_localizadores WHERE localizadoresid=?";
+					$sqlvta =" SELECT l.registrodeventasid, r.registrodeventasname FROM vtiger_localizadores l ";
+					$sqlvta.=" INNER JOIN vtiger_registrodeventas r ON l.registrodeventasid=r.registrodeventasid ";
+					$sqlvta.=" WHERE localizadoresid=? ";
 					$qryvta=$adb->pquery($sqlvta, array($localizadorid));	
 					$idVenta=$adb->query_result($qryvta,0,'registrodeventasid');
-
+					$venta=$adb->query_result($qryvta,0,'registrodeventasname');
+					/*
 					$sql="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=?";
 					$result = $adb->pquery($sql, array($idVenta));	
 					$venta=$adb->query_result($result,0,'registrodeventasname');
-
+					*/
 					if ($idVenta>0){
 						//Buscamos pagos no eliminados
 						$pagosCheck=getPagosVerificados($idVenta);	
@@ -33,7 +36,7 @@ class BoletosHandler extends VTEventHandler {
 								$mensaje = getPlantillaEmitirSoto($idVenta,$venta);	
 								$envio=enviarEmail($email,$asunto,$mensaje);				
 							}					
-
+.
 						}else{
 							//Sino enviamos correo a administracion para que verifique los pagos. Status SOTO Confirmar Pago		
 							$setStatus=setStatusSoto($idVenta,"Confirmar Pago");

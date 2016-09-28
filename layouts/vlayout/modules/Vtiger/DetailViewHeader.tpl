@@ -40,32 +40,39 @@
 						 		$('#{$MODULE}_detail_basicAction_Process').click(function(){						 			
 							        var ids1 = new Array();						 
 							        var ids=$("#recordId").val();
-							        ids1.push(ids);						            
-							        
-						            var ajax_data1 = {
-						            "userid" : $("#current_user_id").val(),						
-									"accion" : "procesarLocalizadores",					
-									"id" : ids1					
-									};		
-									jQuery.ajax({
-										data: ajax_data1,
-										url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
-										type: 'get',
-										success: function(response){	
-											var idloc=$("#recordId").val();																								
-											if (response=="Completado"){
-												bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
-												setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); }, 3000);
-											}
-											if (response=="Incompleto"){
-												bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
-												setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
-											}
-											if (response=="Fallido"){
-												bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
-											}	
-										}
-									});
+							        ids1.push(ids);			
+
+									bootbox.confirm( 
+										"¿La Venta es un Boleto SOTO?",
+									    "No",
+									    "Si",
+									    function (result){									        
+								            var ajax_data1 = {
+									            "userid" : $("#current_user_id").val(),						
+												"accion" : "procesarLocalizadores",					
+												"soto" 	: result,					
+												"id" : ids1					
+											};		
+											jQuery.ajax({
+												data: ajax_data1,
+												url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
+												type: 'get',
+												success: function(response){	
+													var idloc=$("#recordId").val();															
+													if (response=="Completado"){
+														bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
+														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); }, 3000);
+													}
+													if (response=="Incompleto"){
+														bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
+														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
+													}
+													if (response=="Fallido"){
+														bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
+													}	
+												}
+											});									    
+										}); 
 							    });	
 							});						
 							</script>

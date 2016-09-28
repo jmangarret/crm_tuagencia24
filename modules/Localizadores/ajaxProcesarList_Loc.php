@@ -1,5 +1,6 @@
 <?
 include("../../config.inc.php");
+include("../Boletos/BoletosFunciones.php");
 $user=$dbconfig['db_username'];
 $pass=$dbconfig['db_password'];
 $bd=$dbconfig['db_name'];
@@ -8,6 +9,7 @@ mysql_select_db($bd);
 $id= $_GET["id"];
 $userid= $_GET["userid"];
 $accion= $_GET["accion"];
+$esSoto= $_GET["soto"];
 $sin_contactos=0;
 $cont=0;
 if ($accion=="procesarLocalizadores"){		
@@ -54,38 +56,47 @@ if ($accion=="procesarLocalizadores"){
 				continue;
 			}
 
-
+			if ($esSoto) 	$tipoVenta='Boleto SOTO';
+			else 			$tipoVenta='Boleto';
 			//Creamos registro de venta
 			$sqlVenta ="insert into vtiger_registrodeventas(registrodeventasid,registrodeventasname,registrodeventastype,fecha,contacto) ";
-			$sqlVenta.="values($crmId,'$moduleRecord','Boleto',NULL,$contactid)";
+			$sqlVenta.="values($crmId,'$moduleRecord','$tipoVenta',NULL,$contactid)";
 			$qryVenta=mysql_query($sqlVenta);
 			$insert_venta=mysql_affected_rows();
 
-			$sqlReg2="insert into vtiger_registrodeventascf(registrodeventasid,cf_1621,cf_1627) values($crmId,'Pendiente de Pago','Venta generada desde Procesar Localizadores')";
-			$qryReg2=mysql_query($sqlReg2);
+			if ($insert_venta){
+				$sqlReg2="insert into vtiger_registrodeventascf(registrodeventasid,cf_1621,cf_1627) values($crmId,'Pendiente de Pago','Venta generada desde Procesar Localizadores')";
+				$qryReg2=mysql_query($sqlReg2);
 
-			$idRecordSig=($idRecord+1);
-			$sqlEnt="UPDATE vtiger_modentity_num SET cur_id=CONCAT('0',$idRecordSig) WHERE cur_id='$idRecord' AND active=1 AND semodule='RegistroDeVentas'";
-			$qryEnt=mysql_query($sqlEnt);
-			/// FIN CREACION DEL REGISTO DE VENTAS///
+				$idRecordSig=($idRecord+1);
+				$sqlEnt="UPDATE vtiger_modentity_num SET cur_id=CONCAT('0',$idRecordSig) WHERE cur_id='$idRecord' AND active=1 AND semodule='RegistroDeVentas'";
+				$qryEnt=mysql_query($sqlEnt);
+				/// FIN CREACION DEL REGISTO DE VENTAS///
 
-			//$sql="UPDATE vtiger_boletos SET status='Procesado' WHERE boletosid=".$i;		
-			$qryUpdLoc=mysql_query("UPDATE vtiger_localizadores SET procesado=1 WHERE localizadoresid=".$idLoc);			
-			$update_loc=mysql_affected_rows();
-			if ($insert_venta>0 && $update_loc>0){
-				//Actualizamos venta asociada en Localizador
-				$qryVtaLoc=mysql_query("UPDATE vtiger_localizadores SET registrodeventasid=$crmId WHERE localizadoresid=".$idLoc);
-				//Insertamos relacion entre modulos vtiger
-				$qryInsertRel=mysql_query("INSERT INTO vtiger_crmentityrel values($crmId,'RegistroDeVentas',$idLoc,'Localizadores');");
-				//Buscamos boletos del localizador para actualizar status.
-				/*
-				$qryBoletos=mysql_query("SELECT boletosid FROM vtiger_boletos WHERE localizadorid=".$idLoc);			
-				while ($rowBoletos=mysql_fetch_row($qryBoletos)){
-					$idBoleto=$rowBoletos[0];	
-					$sql=mysql_query("UPDATE vtiger_boletos SET status='Procesado' WHERE boletosid=".$idBoleto);		
+				//$sql="UPDATE vtiger_boletos SET status='Procesado' WHERE boletosid=".$i;		
+				$qryUpdLoc=mysql_query("UPDATE vtiger_localizadores SET procesado=1 WHERE localizadoresid=".$idLoc);			
+				$update_loc=mysql_affected_rows();
+				if ($update_loc>0){
+					//Actualizamos venta asociada en Localizador
+					$qryVtaLoc=mysql_query("UPDATE vtiger_localizadores SET registrodeventasid=$crmId WHERE localizadoresid=".$idLoc);
+					//Insertamos relacion entre modulos vtiger
+					$qryInsertRel=mysql_query("INSERT INTO vtiger_crmentityrel values($crmId,'RegistroDeVentas',$idLoc,'Localizadores');");
+					//Buscamos boletos del localizador para actualizar status.
+					/*
+					$qryBoletos=mysql_query("SELECT boletosid FROM vtiger_boletos WHERE localizadorid=".$idLoc);			
+					while ($rowBoletos=mysql_fetch_row($qryBoletos)){
+						$idBoleto=$rowBoletos[0];	
+						$sql=mysql_query("UPDATE vtiger_boletos SET status='Procesado' WHERE boletosid=".$idBoleto);		
+					}
+					*/
+
+					//jmangarret oct2016 - WORKFLOW SOTOS - Verificacion de Passport
+					if ($esSoto){
+
+					}
+					//fin
+					$cont++;						
 				}
-				*/
-				$cont++;						
 			}
 		}
 	}
