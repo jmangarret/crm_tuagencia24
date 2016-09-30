@@ -6,10 +6,10 @@ $pass=$dbconfig['db_password'];
 $bd=$dbconfig['db_name'];
 mysql_connect("localhost",$user,$pass);
 mysql_select_db($bd);
-$id= $_GET["id"];
-$userid= $_GET["userid"];
-$accion= $_GET["accion"];
-$esSoto= $_GET["soto"];
+$id= 	$_GET["id"];
+$userid=$_GET["userid"];
+$accion=$_GET["accion"];
+$gds= 	$_GET["gds"];
 $sin_contactos=0;
 $cont=0;
 if ($accion=="procesarLocalizadores"){		
@@ -56,8 +56,8 @@ if ($accion=="procesarLocalizadores"){
 				continue;
 			}
 
-			if ($esSoto) 	$tipoVenta='Boleto SOTO';
-			else 			$tipoVenta='Boleto';
+			if ($gds=="Servi") 	$tipoVenta='Boleto SOTO';
+			else 				$tipoVenta='Boleto';
 			//Creamos registro de venta
 			$sqlVenta ="insert into vtiger_registrodeventas(registrodeventasid,registrodeventasname,registrodeventastype,fecha,contacto) ";
 			$sqlVenta.="values($crmId,'$moduleRecord','$tipoVenta',NULL,$contactid)";

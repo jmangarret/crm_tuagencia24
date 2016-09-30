@@ -5,7 +5,7 @@ class BoletosHandler extends VTEventHandler {
     	global $log, $adb;
         $moduleName = $entityData->getModuleName();
         if ($moduleName == 'Boletos') {  
-        	if ($eventName == 'vtiger.entity.aftersave') {          
+        	if ($eventName == 'vtiger.entity.aftersave') {          	
 				$boletoid=$entityData->getId(); 
 				$checkpassport = $entityData->get('pasaportecheck');
 				$localizadorid = $entityData->get('localizadorid');
@@ -14,9 +14,9 @@ class BoletosHandler extends VTEventHandler {
 					$sqlvta =" SELECT l.registrodeventasid, r.registrodeventasname FROM vtiger_localizadores l ";
 					$sqlvta.=" INNER JOIN vtiger_registrodeventas r ON l.registrodeventasid=r.registrodeventasid ";
 					$sqlvta.=" WHERE localizadoresid=? ";
-					$qryvta=$adb->pquery($sqlvta, array($localizadorid));	
-					$idVenta=$adb->query_result($qryvta,0,'registrodeventasid');
-					$venta=$adb->query_result($qryvta,0,'registrodeventasname');
+					$qryvta=	$adb->pquery($sqlvta, array($localizadorid));	
+					$idVenta=	$adb->query_result($qryvta,0,'registrodeventasid');
+					$venta=		$adb->query_result($qryvta,0,'registrodeventasname');
 					/*
 					$sql="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=?";
 					$result = $adb->pquery($sql, array($idVenta));	
@@ -36,7 +36,6 @@ class BoletosHandler extends VTEventHandler {
 								$mensaje = getPlantillaEmitirSoto($idVenta,$venta);	
 								$envio=enviarEmail($email,$asunto,$mensaje);				
 							}					
-.
 						}else{
 							//Sino enviamos correo a administracion para que verifique los pagos. Status SOTO Confirmar Pago		
 							$setStatus=setStatusSoto($idVenta,"Confirmar Pago");
