@@ -88,7 +88,7 @@
 						<script>		
 							var _loc={$LISTVIEW_ENTRY->getId()};									
 								$.ajax({
-								data: { loc : _loc},
+								data: { loc : _loc, 'accion':'getNumBoletos'},
 								type: "POST",
 								url: 'modules/Localizadores/ajax.php',
 								success: function(response){														

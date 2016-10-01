@@ -105,7 +105,7 @@ class Localizadores extends Vtiger_CRMEntity {
 	function vtlib_handler($moduleName, $eventType) {
  		if($eventType == 'module.postinstall') {
 			//Delete duplicates from all picklist
-			static::deleteDuplicatesFromAllPickLists($moduleName);
+			//static::deleteDuplicatesFromAllPickLists($moduleName);
 		} else if($eventType == 'module.disabled') {
 			// TODO Handle actions before this module is being uninstalled.
 		} else if($eventType == 'module.preuninstall') {
@@ -114,7 +114,7 @@ class Localizadores extends Vtiger_CRMEntity {
 			// TODO Handle actions before this module is updated.
 		} else if($eventType == 'module.postupdate') {
 			//Delete duplicates from all picklist
-			static::deleteDuplicatesFromAllPickLists($moduleName);
+			//static::deleteDuplicatesFromAllPickLists($moduleName);
 		}
  	}
 	
@@ -140,7 +140,7 @@ class Localizadores extends Vtiger_CRMEntity {
 		
 		foreach ($a_picklists as $picklist)
 		{
-			static::deleteDuplicatesFromPickList($picklist);
+			//static::deleteDuplicatesFromPickList($picklist);
 		}
 		
 		$log->debug("Invoking deleteDuplicatesFromAllPickList(".$moduleName.") method ...DONE");

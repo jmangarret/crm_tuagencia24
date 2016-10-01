@@ -1642,7 +1642,7 @@ class CRMEntity {
 					$email="tuagencia.sistemas01@gmail.com";
 					$nombre="Hola,";
 					$asunto="Prueba CRM - Verificar Datos (Reserva de SOTO)";
-					$mensaje=getPlantillaVerficarDatos();
+					$mensaje=getPlantillaVerificarDatos();
 					//Verificamos si es un SOTO
 					$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE localizadoresid=? AND gds= ?";
 					$result = $adb->pquery($sqlSoto, array($relcrmid,"Servi"));	

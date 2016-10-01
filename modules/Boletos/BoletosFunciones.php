@@ -18,6 +18,7 @@ function getVentaGds($ventaid){
 function getLocGds($locid){
 	global $adb;
 	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE localizadoresid=?";
+	die($sqlSoto.$locid);
 	$result = $adb->pquery($sqlSoto, array($locid));	
 	$row = $adb->fetch_row($result);
 	$gds=$row[0];
@@ -95,7 +96,7 @@ function getPlantillaVerificarPagos($ventaid, $label){
 	</html> "; 
 	return $mensaje;
 }
-function getPlantillaVerificarDatos($ventaid, $label){
+function getPlantillaVerificarDatos($locid, $label){
 	$host= $_SERVER["HTTP_HOST"];
 	$mensaje = " 
 	<html>
@@ -105,8 +106,7 @@ function getPlantillaVerificarDatos($ventaid, $label){
 	<body> 
 	<p>Hola, </p>
 	<p>Se ha registrado una Reserva de SOTO para la Verificacion de Datos:</p>					
-	<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$relcrmid."'>".$loc."</a></p>		
-	<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$crmid."'>".$venta."</a></p>		
+	<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$locid."'>".$label."</a></p>		
 	<BR><BR><BR>
 	<i>
 	Gracias,		

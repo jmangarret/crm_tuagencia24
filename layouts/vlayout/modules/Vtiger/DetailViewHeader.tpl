@@ -38,43 +38,59 @@
 							<script type="text/javascript">										 
 							 $(document).ready(function() {	
 						 		$('#{$MODULE}_detail_basicAction_Process').click(function(){						 			
-							        var ids1 = new Array();						 
-							        var ids=$("#recordId").val();
+							        var ids1 	= new Array();						 
+							        var ids 	=$("#recordId").val();
 							        ids1.push(ids);			
-
-									bootbox.confirm( 
-										"¿La Venta es un Boleto SOTO?",
-									    "No",
-									    "Si",
-									    function (result){									        
-								            var ajax_data1 = {
+						        
+						        	var ajax_data = {
+						        		'idloc' : ids, 
+						        		'accion' : 'valBoletosSoto'
+						        	};
+						        	jQuery.ajax({
+					        			data: ajax_data,
+										url: 'modules/Localizadores/ajax.php',
+										type: 'get',
+										success: function(response){	
+											alert(response);
+											var ajax_data1 = {
 									            "userid" : $("#current_user_id").val(),						
 												"accion" : "procesarLocalizadores",					
-												"soto" 	: result,					
+												"gds" 	: response,					
 												"id" : ids1					
-											};		
+											};														
+											if (response=="Localizador sin Boletos"){
+												bootbox.alert("El localizador no posee Boletos SOTO registrados.");
+												return false;
+											}
+											if (response=="Boletos sin Pasaporte"){
+												bootbox.alert("Boletos SOTO sin pasaporte adjunto.");
+												return false;
+											}
+
 											jQuery.ajax({
 												data: ajax_data1,
 												url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
 												type: 'get',
-												success: function(response){	
+												success: function(response2){	
 													var idloc=$("#recordId").val();															
-													if (response=="Completado"){
+													if (response2=="Completado"){
 														bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
 														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); }, 3000);
 													}
-													if (response=="Incompleto"){
+													if (response2=="Incompleto"){
 														bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
 														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
 													}
-													if (response=="Fallido"){
+													if (response2=="Fallido"){
 														bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
 													}	
-												}
-											});									    
-										}); 
-							    });	
-							});						
+												} //fin response 2
+											});	//fin ajax_data1							    
+										} //fin response 1
+									});	//fin ajax_data							    										
+						        	
+							});	//fin click	
+							}//fin document ready
 							</script>
 							{/if}&nbsp;
 							<!-- FIN BOTON DE ACCION PROCESAR EN VISTA DETALLE DEL LOCALIZADOR, may2016 !-->				   
