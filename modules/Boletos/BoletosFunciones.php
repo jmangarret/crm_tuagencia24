@@ -1,4 +1,7 @@
 <?php
+include_once('../../config.inc.php');   
+$con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['db_password']);
+$db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
 	global $adb;
 	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodeventas WHERE registrodeventasid=? AND registrodeventastype= ?";
@@ -18,9 +21,10 @@ function getVentaGds($ventaid){
 function getLocGds($locid){
 	global $adb;
 	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE localizadoresid=?";
-	die($sqlSoto.$locid);
-	$result = $adb->pquery($sqlSoto, array($locid));	
-	$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlSoto);
+	//$result = $adb->pquery($sqlSoto, array($locid));	
+	//$row = $adb->fetch_row($result);
+	$row=mysql_fetch_row($result);
 	$gds=$row[0];
 	return $gds;
 }
