@@ -81,18 +81,21 @@ if ($accion=="procesarLocalizadores"){
 					$qryVtaLoc=mysql_query("UPDATE vtiger_localizadores SET registrodeventasid=$crmId WHERE localizadoresid=".$idLoc);
 					//Insertamos relacion entre modulos vtiger
 					$qryInsertRel=mysql_query("INSERT INTO vtiger_crmentityrel values($crmId,'RegistroDeVentas',$idLoc,'Localizadores');");
-					//Buscamos boletos del localizador para actualizar status.
-					/*
-					$qryBoletos=mysql_query("SELECT boletosid FROM vtiger_boletos WHERE localizadorid=".$idLoc);			
-					while ($rowBoletos=mysql_fetch_row($qryBoletos)){
-						$idBoleto=$rowBoletos[0];	
-						$sql=mysql_query("UPDATE vtiger_boletos SET status='Procesado' WHERE boletosid=".$idBoleto);		
-					}
-					*/
-
+		
 					//jmangarret oct2016 - WORKFLOW SOTOS - Verificacion de Passport
-					if ($esSoto){
+					if ($tipoVenta=="Boleto SOTO"){
+						$sql="SELECT localizador FROM vtiger_localizadores WHERE localizadoresid=$idloc";
+						$result = mysql_query($sql);	
+						$row = mysql_fetch_row($result);
+						$loc=$row[0];
 
+						$email="tuagencia.sistemas01@gmail.com";
+						$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
+						$mensaje=getPlantillaVerificarDatos($idloc, $loc);
+						$envio=enviarEmail($email,$asunto,$mensaje);			
+						if ($envio){
+							setStatusSoto($crmid,"Reservado");
+						}
 					}
 					//fin
 					$cont++;						

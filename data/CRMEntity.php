@@ -1632,17 +1632,12 @@ class CRMEntity {
 					$sql="SELECT localizador FROM vtiger_localizadores WHERE localizadoresid=?";
 					$result = $adb->pquery($sql, array($relcrmid));	
 					$row = $adb->fetch_row($result);
+					$idloc=$relcrmid;
 					$loc=$row[0];
-
-					$sql="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=?";
-					$result = $adb->pquery($sql, array($crmid));	
-					$row = $adb->fetch_row($result);
-					$venta=$row[0];
-					
+		
 					$email="tuagencia.sistemas01@gmail.com";
-					$nombre="Hola,";
-					$asunto="Prueba CRM - Verificar Datos (Reserva de SOTO)";
-					$mensaje=getPlantillaVerificarDatos();
+					$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
+					$mensaje=getPlantillaVerificarDatos($idloc, $loc);
 					//Verificamos si es un SOTO
 					$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE localizadoresid=? AND gds= ?";
 					$result = $adb->pquery($sqlSoto, array($relcrmid,"Servi"));	
@@ -1652,8 +1647,9 @@ class CRMEntity {
 					if ($esSoto)				
 					$envio=enviarEmail($email,$asunto,$mensaje);			
 					if ($envio){
+						//SP BD setCrmEntityRel actualiza el status Soto de la Venta a Reservado
 						$log->debug("correo SOTO Enviado");
-						//Por base de datos el procedure setCrmEntityRel actualiza el status Soto de la venta a Reservado
+						
 					}else{
 						$log->debug("Error Enviando correo SOTO ".$envio);
 					}

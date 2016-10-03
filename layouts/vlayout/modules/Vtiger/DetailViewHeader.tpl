@@ -40,8 +40,7 @@
 						 		$('#{$MODULE}_detail_basicAction_Process').click(function(){						 			
 							        var ids1 	= new Array();						 
 							        var ids 	=$("#recordId").val();
-							        ids1.push(ids);			
-						        
+							        ids1.push(ids);									        
 						        	var ajax_data = {
 						        		'idloc' : ids, 
 						        		'accion' : 'valBoletosSoto'
@@ -51,7 +50,6 @@
 										url: 'modules/Localizadores/ajax.php',
 										type: 'get',
 										success: function(response){	
-											alert(response);
 											var ajax_data1 = {
 									            "userid" : $("#current_user_id").val(),						
 												"accion" : "procesarLocalizadores",					
@@ -74,23 +72,26 @@
 												success: function(response2){	
 													var idloc=$("#recordId").val();															
 													if (response2=="Completado"){
-														bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
-														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); }, 3000);
+														bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");								
+														setTimeout(function(){ 
+															window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); 
+															},3000);
 													}
 													if (response2=="Incompleto"){
-														bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
-														setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
+														bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO.");	
+														setTimeout(function(){ 
+															window.location.assign("index.php?module=Localizadores&view=List"); 
+															},3000);
 													}
 													if (response2=="Fallido"){
 														bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
 													}	
-												} //fin response 2
-											});	//fin ajax_data1							    
-										} //fin response 1
-									});	//fin ajax_data							    										
-						        	
-							});	//fin click	
-							}//fin document ready
+												} 
+											});	
+										} 
+									});	
+								});	
+							});
 							</script>
 							{/if}&nbsp;
 							<!-- FIN BOTON DE ACCION PROCESAR EN VISTA DETALLE DEL LOCALIZADOR, may2016 !-->				   

@@ -65,23 +65,49 @@
 					 $(document).ready(function() {	
 				 		$('#{$MODULE}_listView_basicAction_Process').click(function(){
 					        var ids1 = new Array();						 
-					        $("input[class=listViewEntriesCheckBox]:checked").each(function() {							   					        	
+					        var ids=0;
+					        $("input[class=listViewEntriesCheckBox]:checked").each(function() {	
+					        	ids=$(this).val();						   					        	
 					            ids1.push($(this).val());						            
-					        });												        
-				            var ajax_data1 = {
-				            "userid" : $("#current_user_id").val(),						
-							"accion" : "procesarLocalizadores",					
-							"id" : ids1					
-							};		
-							jQuery.ajax({
-								data: ajax_data1,
-								url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
+					        });			
+							var ajax_data = {
+				        		'idloc' : ids, 
+				        		'accion' : 'valBoletosSoto'
+				        	};
+				        	jQuery.ajax({
+			        			data: ajax_data,
+								url: 'modules/Localizadores/ajax.php',
 								type: 'get',
-								success: function(response){														
-									if (response!='')
-									bootbox.alert(response);
-								}
-							});
+								success: function(response){	
+									var ids1 = new Array();						 
+							        $("input[class=listViewEntriesCheckBox]:checked").each(function() {
+							            ids1.push($(this).val());						            
+							        });												
+						            var ajax_data1 = {
+						            "userid" : $("#current_user_id").val(),						
+									"accion" : "procesarLocalizadores",					
+									"gds" 	: response,					
+									"id" : ids1					
+									};		
+									if (response=="Localizador sin Boletos"){
+										bootbox.alert("El localizador no posee Boletos SOTO registrados.");
+										return false;
+									}
+									if (response=="Boletos sin Pasaporte"){
+										bootbox.alert("Boletos SOTO sin pasaporte adjunto.");
+										return false;
+									}
+									jQuery.ajax({
+										data: ajax_data1,
+										url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
+										type: 'get',
+										success: function(response2){														
+											if (response2!='')
+											bootbox.alert(response2);
+										}
+									});
+								} 
+							});	
 					    });	
 					});						
 					</script>
