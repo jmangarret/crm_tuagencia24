@@ -22,16 +22,14 @@ class RegistroDePagosHandler extends VTEventHandler {
 				$row = $adb->fetch_row($result);
 				$venta=$row[0];
 
-				$sql="SELECT referencia FROM vtiger_registrodepagos WHERE registrodepagosid=?";
-				$result = $adb->pquery($sql, array($idpago));	
-				$row = $adb->fetch_row($result);
-				$pago=$row[0];				
 				//Verificamos si es un SOTO
 				$esSoto=esVentaSoto($idVenta);
+				$idloc=getLocId($idVenta,"RegistroDeVentas");
+				$cantBoletos=getCantBoletos($idloc);
 				//Verificamos Pagos
 				$pagosCheck=getPagosVerificados($idVenta);
-				$log->debug("Entering handle event pagoscheck esSoto".$pagosCheck."/".$esSoto);
-				if ($pagosCheck && $esSoto){					
+				$log->debug("Entering handle event pagoscheck esSoto:".$esSoto ."/pagoscheck:".$pagosCheck." /cantBoletos:".$cantBoletos);
+				if ($pagosCheck && $esSoto && $cantBoletos>0){					
 					$log->debug("Entering handle event pagoscheckeados esSoto ");					
 					$email="tuagencia.sistemas01@gmail.com";					
 					$asunto="SOTO CRM - Emitir SOTO (Pago Verificado)";

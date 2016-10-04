@@ -7,7 +7,8 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *************************************************************************************/
-include_once 'modules/RegistroDePagos/RegistroDePagosHandler.php';
+include_once('modules/RegistroDePagos/RegistroDePagosHandler.php');
+include_once('modules/Boletos/BoletosFunciones.php');
 class RegistroDeVentasHandler extends VTEventHandler {
 	function handleEvent($eventName, $data) {
 		global $log, $current_module, $adb, $current_user;
@@ -28,6 +29,21 @@ class RegistroDeVentasHandler extends VTEventHandler {
 				$nrows=$row[0];
         	}
         	$this->updateVentas($id);
+
+        	//jmangarret oct2016 - WORKFLOW SOTO - Status Emitido
+        	$gds=getVentaGds($id);
+        	$tipodeventa=$_REQUEST["registrodeventastype"];
+        	$statussoto=$_REQUEST["statussoto"];
+        	if ($statussoto=="Emitido"){
+        		if ($tipodeventa=="Boleto SOTO" || $gds=="Servi"){
+        			$email="tuagencia.sistemas01@gmail.com";
+					$asunto="SOTO CRM - Emitido (Actualizar Boletos)";
+					$mensaje = getPlantillaEmitido($idVenta,$venta);	
+					$envio=enviarEmail($email,$asunto,$mensaje);				
+        		}	
+        	}
+        	$log->debug("Entering handle event venta gds:".$gds ."/tipo:".$tipodeventa."/statussoto:".$statussoto);						
+        	
         }
     }
     function updateVentas($idVenta){

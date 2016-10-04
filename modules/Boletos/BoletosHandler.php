@@ -1,5 +1,6 @@
 <?php
 include('BoletosFunciones.php');
+include_once('../../include/PHPMailer/enviar_email.php');
 class BoletosHandler extends VTEventHandler {
     function handleEvent($eventName, $entityData) {  
     	global $log, $adb;
@@ -9,6 +10,7 @@ class BoletosHandler extends VTEventHandler {
 				$boletoid=$entityData->getId(); 
 				$checkpassport = $entityData->get('pasaportecheck');
 				$localizadorid = $entityData->get('localizadorid');
+				$log->debug("Entering handle event boletos checkpass:".$checkpassport);
 				if ($checkpassport){
 					//Verificamos si los boletos tienen venta asociada
 					$sqlvta =" SELECT l.registrodeventasid, r.registrodeventasname FROM vtiger_localizadores l ";
@@ -22,36 +24,46 @@ class BoletosHandler extends VTEventHandler {
 					$result = $adb->pquery($sql, array($idVenta));	
 					$venta=$adb->query_result($result,0,'registrodeventasname');
 					*/
-					if ($idVenta>0){
+					$cantPagos=getCantPagos($idVenta);	//Preguntar Validacion de pagos para verificar pasaporte??? 
+					if ($idVenta>0 && $cantPagos>0){
 						//Buscamos pagos no eliminados
-						$pagosCheck=getPagosVerificados($idVenta);	
+						$pagosCheck=getPagosVerificados($idVenta);							
 						if ($pagosCheck){
 							//Todos los Pagos verificados
 							//Si estan verificados: Status SOTO Emitir SOTO y Enviamos Correo a Gerencia.
 							$setStatus=setStatusSoto($idVenta,"Emitir Soto");
 							if ($setStatus){
 								$email="tuagencia.sistemas01@gmail.com";
-								$nombre="Hola,";
 								$asunto="SOTO CRM - Emitir SOTO (Pago Verificado)";
 								$mensaje = getPlantillaEmitirSoto($idVenta,$venta);	
 								$envio=enviarEmail($email,$asunto,$mensaje);				
 							}					
 						}else{
-							//Sino enviamos correo a administracion para que verifique los pagos. Status SOTO Confirmar Pago		
-							$setStatus=setStatusSoto($idVenta,"Confirmar Pago");
-							if ($setStatus){
-								$email="tuagencia.sistemas01@gmail.com";
-								$nombre="Hola,";
-								$asunto="SOTO CRM - Confirmar Pagos (Pasaporte Verificado)";
-								$mensaje = getPlantillaVerificarPagos($idVenta,$venta);	
-								$envio=enviarEmail($email,$asunto,$mensaje);				
-							}					
-
-						}
-						
-					}							
+							//Verificamos si la forma de pago es Credito, para ver que status colocar
+							$formaDePago=getFormaDePago($localizadorid);
+							if ($formaDePago=="Credito"){
+								//Pasa directo a Emitir Soto
+								$setStatus=setStatusSoto($idVenta,"Emitir Soto");
+								if ($setStatus){
+									$email="tuagencia.sistemas01@gmail.com";
+									$asunto="SOTO CRM - Emitir SOTO (Pago con TDC)";
+									$mensaje = getPlantillaEmitirSoto($idVenta,$venta);	
+									$envio=enviarEmail($email,$asunto,$mensaje);				
+								}													
+							}else{
+								//Sino enviamos correo a administracion para que verifique los pagos. Status SOTO Confirmar Pago		
+								$setStatus=setStatusSoto($idVenta,"Confirmar Pago");
+								if ($setStatus){
+									$email="tuagencia.sistemas01@gmail.com";
+									$asunto="SOTO CRM - Confirmar Pagos (Pasaporte Verificado)";
+									$mensaje = getPlantillaVerificarPagos($idVenta,$venta);	
+									$envio=enviarEmail($email,$asunto,$mensaje);				
+								}													
+							}							
+						}						
+					}						
 				}
-				
+				$log->debug("Entering handle event boletos, idVenta".$idVenta ."/cantPagos:".$cantPagos." /pagosCheck:".$pagosCheck);						
         	}
     	}
     	return true;

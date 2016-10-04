@@ -138,6 +138,9 @@
                                         {if $IS_DELETABLE}
                                             <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
                                         {/if}
+                                        {if $MODULE eq 'Localizadores'}
+                                        <a class="#" href="#"><img src="themes/images/arrow_up.png"></a>
+                                        {/if}
                                     </span>
                                 </div>
                             </td>

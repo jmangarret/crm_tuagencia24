@@ -312,9 +312,10 @@ class Vtiger_Field_Model extends Vtiger_Field {
 		$moduleModel = $this->getModule();
         $quickCreate = $this->get('quickcreate');
         if(($quickCreate == self::QUICKCREATE_MANDATORY || $quickCreate == self::QUICKCREATE_ENABLED
-        	|| $this->isMandatory())) {
+        	|| $this->isMandatory()  && $this->get('uitype') != 69)) {
+        	// || $this->isMandatory())) { tipo file en elquickcreate
         	//jmangarret 12sept2016 campo tipo field en el quickcrepopup
-          	//|| $this->isMandatory()  && $this->get('uitype') != 69)) {
+          	//|| $this->isMandatory()  && $this->get('uitype') != 69)) { original
 
             //isQuickCreateSupported will not be there for settings
 			if(method_exists($moduleModel,'isQuickCreateSupported') && $moduleModel->isQuickCreateSupported()) {

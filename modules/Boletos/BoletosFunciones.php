@@ -18,6 +18,30 @@ function getVentaGds($ventaid){
 	$gds=$row[0];
 	return $gds;
 }
+function getCantPagos($ventaid){
+	global $adb;
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodepagos WHERE registrodeventasid=?";
+	$result = $adb->pquery($sqlSoto, array($ventaid));	
+	$row = $adb->fetch_row($result);
+	$cant=$row[0];
+	return $cant;
+}
+function getCantBoletos($locid){
+	global $adb;
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_boletos WHERE localizadoresid=?";
+	$result = $adb->pquery($sqlSoto, array($locid));	
+	$row = $adb->fetch_row($result);
+	$cant=$row[0];
+	return $cant;
+}
+function getFormaDePago($locid){
+	global $adb;
+	$sqlFp="SELECT paymentmethod FROM vtiger_localizadores WHERE localizadoresid=?";
+	$result = $adb->pquery($sqlFp, array($locid));	
+	$row = $adb->fetch_row($result);
+	$fp=$row[0];
+	return $fp;
+}
 function getLocGds($locid){
 	global $adb;
 	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE localizadoresid=$locid";
@@ -25,6 +49,22 @@ function getLocGds($locid){
 	$row=mysql_fetch_row($result);
 	$gds=$row[0];
 	return $gds;
+}
+function getLocId($idrel,$module){
+	global $adb;
+	if ($module=="RegistroDeVentas"){
+		$sqlLoc="SELECT localizadoresid FROM vtiger_localizadores WHERE gds='Servi' AND registrodeventasid=$idrel";
+		$result=mysql_query($sqlLoc);
+		$row=mysql_fetch_row($result);
+		$idloc=$row[0];	
+	}
+	if ($module=="Boletos"){
+		$sqlLoc="SELECT localizadorid FROM vtiger_boletos WHERE boletosid=$idrel";
+		$result=mysql_query($sqlLoc);
+		$row=mysql_fetch_row($result);
+		$idloc=$row[0];	
+	}	
+	return $idloc;
 }
 function setStatusSoto($ventaid,$status){
 	global $adb;
@@ -109,6 +149,26 @@ function getPlantillaVerificarDatos($locid, $label){
 	<p>Hola, </p>
 	<p>Se ha registrado una Reserva de SOTO para la Verificacion de Datos:</p>					
 	<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$locid."'>".$label."</a></p>		
+	<BR><BR><BR>
+	<i>
+	Gracias,		
+	<p>Equipo TuAgencia24.com</p>
+	</i>
+	</body> 
+	</html> "; 	
+	return $mensaje;
+}
+function getPlantillaEmitido($ventaid, $label){
+	$host= $_SERVER["HTTP_HOST"];
+	$mensaje = " 
+	<html>
+	<head> 
+	<title>Info - Tu Agencia 24</title> 
+	</head> 
+	<body> 
+	<p>Hola, </p>
+	<p>Se ha completado la emisión SOTO. Por favor complete los Numeros de Boletos de siguiente Registro de Venta:</p>					
+	<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$ventaid."'>".$label."</a></p>		
 	<BR><BR><BR>
 	<i>
 	Gracias,		
