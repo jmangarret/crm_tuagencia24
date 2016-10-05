@@ -1,6 +1,6 @@
 <?php
 //include('include/PHPMailer/enviar_email.php');
-include('modules/Boletos/BoletosFunciones.php');
+include_once('modules/Boletos/BoletosFunciones.php');
 class RegistroDePagosHandler extends VTEventHandler {
     function handleEvent($eventName, $entityData) {  
     	global $log, $adb;
@@ -23,7 +23,7 @@ class RegistroDePagosHandler extends VTEventHandler {
 				$venta=$row[0];
 
 				//Verificamos si es un SOTO
-				$esSoto=esVentaSoto($idVenta);
+				$esSoto=esVentaSoto($idVenta);				
 				$idloc=getLocId($idVenta,"RegistroDeVentas");
 				$cantBoletos=getCantBoletos($idloc);
 				//Verificamos Pagos

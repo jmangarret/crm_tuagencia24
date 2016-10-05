@@ -1,5 +1,5 @@
 <?php
-include('BoletosFunciones.php');
+include_once('BoletosFunciones.php');
 include_once('../../include/PHPMailer/enviar_email.php');
 class BoletosHandler extends VTEventHandler {
     function handleEvent($eventName, $entityData) {  

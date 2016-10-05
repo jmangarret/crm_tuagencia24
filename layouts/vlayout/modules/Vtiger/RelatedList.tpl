@@ -138,10 +138,22 @@
                                         {if $IS_DELETABLE}
                                             <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
                                         {/if}
-                                        {if $MODULE eq 'Localizadores'}
-                                        <a class="#" href="#"><img src="themes/images/arrow_up.png"></a>
-                                        {/if}
+
                                     </span>
+                                        {if $MODULE eq 'Localizadores'}  
+                                        <script type="text/javascript">
+                                            function popup(url,ancho,alto) {
+                                            var posicion_x; 
+                                            var posicion_y; 
+                                            posicion_x=(screen.width/2)-(ancho/2); 
+                                            posicion_y=(screen.height/2)-(alto/2); 
+                                            window.open(url, "leonpurpura.com", "width="+ancho+",height="+alto+",menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left="+posicion_x+",top="+posicion_y+"");
+                                            }
+                                            </script>                                                    
+                                        <a href="javascript:popup('upload.php?id={$RELATED_RECORD->getId()}',400,300)">
+                                            <img class="alignMiddle" src="themes/images/icono_user.png" title="Adjuntar Pasaporte">
+                                        </a>
+                                        {/if}
                                 </div>
                             </td>
                         {/if}
@@ -151,12 +163,13 @@
             {/foreach}
 
             {if $MODULE eq 'RegistroDeVentas'}
-                <tr style="color:white;background-color:RGB(0,101,166)">
-                    <td><b>TOTAL GENERAL Bs:</b> {$TOTALBS} {$moduleName}</td>
-                    <td><b>TOTAL GENERAL $:</b> {$TOTALDS} </td>
+                <tr class="listViewHeaders">
+                    <th class="medium"><b>TOTAL GENERAL Bs:</b> {$TOTALBS}</td>
+                    <th class="medium"><b>TOTAL GENERAL $:</b> {$TOTALDS} </td>
                 </tr>
-                <script type="text/javascript">                                      
-                 $(document).ready(function() {                             
+
+                <script type="text/javascript">                                                    
+                 $(document).ready(function() {                                                  
                     if(window.location.href.indexOf('module=RegistroDeVentas&relatedModule=RegistroDePagos&view=Detail')!== -1) {
                         var ids3 = new Array();     
                         var ajax_data3 = {                                         
@@ -174,7 +187,8 @@
                                 }                            
                             }
                         });                                
-                    }                                        
+                    }                                      
+
                 });                     
                 </script>
             {/if}

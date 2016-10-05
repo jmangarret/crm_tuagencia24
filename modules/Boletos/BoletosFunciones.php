@@ -1,5 +1,5 @@
 <?php
-include_once('../../config.inc.php');   
+include_once('config.inc.php');   
 $con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['db_password']);
 $db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
@@ -28,11 +28,33 @@ function getCantPagos($ventaid){
 }
 function getCantBoletos($locid){
 	global $adb;
-	$sqlSoto="SELECT COUNT(*) FROM vtiger_boletos WHERE localizadoresid=?";
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_boletos WHERE localizadorid=?";
 	$result = $adb->pquery($sqlSoto, array($locid));	
 	$row = $adb->fetch_row($result);
 	$cant=$row[0];
 	return $cant;
+}
+function validarPasaportes($locid){
+	global $adb;
+	$cont=0;
+	$sqlBol ="SELECT * FROM vtiger_boletos  ";
+	$sqlBol.="INNER JOIN vtiger_crmentity ON vtiger_boletos.boletosid = vtiger_crmentity.crmid ";
+	$sqlBol.=" WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = ?";
+	$resBol = $adb->pquery($sqlSoto, array($locid));	
+	while ($rowBol = $adb->fetch_array($resBol)){
+		$boletosid=$rowBol["boletosid"];
+		$sql = "SELECT attachmentsid FROM vtiger_attachments
+					INNER JOIN vtiger_seattachmentsrel ON vtiger_seattachmentsrel.attachmentsid = vtiger_attachments.attachmentsid
+					INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_attachments.attachmentsid
+					WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = ?
+					ORDER BY vtiger_attachments.attachmentsid DESC";
+		$result = $adb->pquery($sqlSoto, array($boletosid));	
+		$numrows = $adb->num_rows($result);		
+		if ($numrows>0){
+			$cont++;
+		}
+	}	
+	return $cont;
 }
 function getFormaDePago($locid){
 	global $adb;
@@ -58,6 +80,12 @@ function getLocId($idrel,$module){
 		$row=mysql_fetch_row($result);
 		$idloc=$row[0];	
 	}
+	if ($module=="Localizadores"){
+		$sqlLoc="SELECT localizadoresid FROM vtiger_localizadores WHERE localizador='$idrel'";
+		$result=mysql_query($sqlLoc);
+		$row=mysql_fetch_row($result);
+		$idloc=$row[0];	
+	}		
 	if ($module=="Boletos"){
 		$sqlLoc="SELECT localizadorid FROM vtiger_boletos WHERE boletosid=$idrel";
 		$result=mysql_query($sqlLoc);

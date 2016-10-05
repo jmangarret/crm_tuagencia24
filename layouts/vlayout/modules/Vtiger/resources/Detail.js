@@ -681,7 +681,8 @@ jQuery.Class("Vtiger_Detail_Js",{
 			if(jQuery(e.target).is('input[type="checkbox"]')) return;
 			var elem = jQuery(e.currentTarget);
 			var recordUrl = elem.data('recordurl');
-			if(typeof recordUrl != "undefined"){
+			/*jmangarret oct2016 - Se agrega condicion modulename para desactivar click en related localizadores*/
+			if(typeof recordUrl != "undefined" && app.getModuleName()!="Localizadores"){
 				window.location.href = recordUrl;
 			}
 		});
