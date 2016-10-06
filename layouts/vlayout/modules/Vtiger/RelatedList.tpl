@@ -147,10 +147,10 @@
                                             var posicion_y; 
                                             posicion_x=(screen.width/2)-(ancho/2); 
                                             posicion_y=(screen.height/2)-(alto/2); 
-                                            window.open(url, "leonpurpura.com", "width="+ancho+",height="+alto+",menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left="+posicion_x+",top="+posicion_y+"");
+                                            window.open(url, "Subir archivo", "width="+ancho+",height="+alto+",menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left="+posicion_x+",top="+posicion_y+"");
                                             }
                                             </script>                                                    
-                                        <a href="javascript:popup('upload.php?id={$RELATED_RECORD->getId()}',400,300)">
+                                        <a href="javascript:popup('upload.php?module=Boletos&id={$RELATED_RECORD->getId()}&user={$USER_MODEL->get('id')}',600,500)">
                                             <img class="alignMiddle" src="themes/images/icono_user.png" title="Adjuntar Pasaporte">
                                         </a>
                                         {/if}
