@@ -1,5 +1,5 @@
 <?php
-include_once('config.inc.php');   
+include_once('../../config.inc.php');   
 $con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['db_password']);
 $db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
@@ -49,7 +49,8 @@ function validarPasaportes($locid){
 					WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = ?
 					ORDER BY vtiger_attachments.attachmentsid DESC";
 		$result = $adb->pquery($sqlSoto, array($boletosid));	
-		$numrows = $adb->num_rows($result);		
+		$numrows = $adb->num_rows($result);	
+		//El query puede devolver muchos registros de todas las veces que se le haya adjuntado pasaporte	
 		if ($numrows>0){
 			$cont++;
 		}
