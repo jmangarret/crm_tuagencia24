@@ -4,33 +4,43 @@ $con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['
 $db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
 	global $adb;
-	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodeventas WHERE registrodeventasid=? AND registrodeventastype= ?";
-	$result = $adb->pquery($sqlSoto, array($ventaid,"Boleto SOTO"));	
-	$row = $adb->fetch_row($result);
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodeventas WHERE registrodeventasid=$ventaid AND registrodeventastype= 'Boleto SOTO'";
+	//$result = $adb->pquery($sqlSoto, array($ventaid,"Boleto SOTO"));	
+	//$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlSoto);
+	$row=mysql_fetch_row($result);
+	
 	$esSoto=$row[0];
 	return $esSoto;
 }
 function getVentaGds($ventaid){
 	global $adb;
-	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE registrodeventasid=?";
-	$result = $adb->pquery($sqlSoto, array($ventaid));	
-	$row = $adb->fetch_row($result);
+	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE registrodeventasid=$ventaid";
+	//$result = $adb->pquery($sqlSoto, array($ventaid));	
+	//$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlSoto);
+	$row=mysql_fetch_row($result);
+	
 	$gds=$row[0];
 	return $gds;
 }
 function getCantPagos($ventaid){
 	global $adb;
-	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodepagos WHERE registrodeventasid=?";
-	$result = $adb->pquery($sqlSoto, array($ventaid));	
-	$row = $adb->fetch_row($result);
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_registrodepagos WHERE registrodeventasid=$ventaid";
+	//$result = $adb->pquery($sqlSoto, array($ventaid));	
+	//$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlSoto);
+	$row=mysql_fetch_row($result);	
 	$cant=$row[0];
 	return $cant;
 }
 function getCantBoletos($locid){
 	global $adb;
-	$sqlSoto="SELECT COUNT(*) FROM vtiger_boletos WHERE localizadorid=?";
-	$result = $adb->pquery($sqlSoto, array($locid));	
-	$row = $adb->fetch_row($result);
+	$sqlSoto="SELECT COUNT(*) FROM vtiger_boletos WHERE localizadorid=$locid";
+	//$result = $adb->pquery($sqlSoto, array($locid));	
+	//$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlSoto);
+	$row=mysql_fetch_row($result);	
 	$cant=$row[0];
 	return $cant;
 }
@@ -39,17 +49,21 @@ function validarPasaportes($locid){
 	$cont=0;
 	$sqlBol ="SELECT * FROM vtiger_boletos  ";
 	$sqlBol.="INNER JOIN vtiger_crmentity ON vtiger_boletos.boletosid = vtiger_crmentity.crmid ";
-	$sqlBol.=" WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = ?";
-	$resBol = $adb->pquery($sqlSoto, array($locid));	
-	while ($rowBol = $adb->fetch_array($resBol)){
+	$sqlBol.=" WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = $locid";
+	//$resBol = $adb->pquery($sqlSoto, array($locid));	
+	$resBol = mysql_query($sqlBol);	
+	//while ($rowBol = $adb->fetch_array($resBol)){
+	while ($rowBol = mysql_fetch_array($resBol)){
 		$boletosid=$rowBol["boletosid"];
 		$sql = "SELECT attachmentsid FROM vtiger_attachments
 					INNER JOIN vtiger_seattachmentsrel ON vtiger_seattachmentsrel.attachmentsid = vtiger_attachments.attachmentsid
 					INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_attachments.attachmentsid
-					WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = ?
+					WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = $boletosid
 					ORDER BY vtiger_attachments.attachmentsid DESC";
-		$result = $adb->pquery($sqlSoto, array($boletosid));	
-		$numrows = $adb->num_rows($result);	
+		//$result = $adb->pquery($sqlSoto, array($boletosid));	
+		$result = mysql_query($sql);	
+		//$numrows = $adb->num_rows($result);	
+		$numrows=mysql_num_rows($result);
 		//El query puede devolver muchos registros de todas las veces que se le haya adjuntado pasaporte	
 		if ($numrows>0){
 			$cont++;
@@ -59,9 +73,11 @@ function validarPasaportes($locid){
 }
 function getFormaDePago($locid){
 	global $adb;
-	$sqlFp="SELECT paymentmethod FROM vtiger_localizadores WHERE localizadoresid=?";
-	$result = $adb->pquery($sqlFp, array($locid));	
-	$row = $adb->fetch_row($result);
+	$sqlFp="SELECT paymentmethod FROM vtiger_localizadores WHERE localizadoresid=$locid";
+	//$result = $adb->pquery($sqlFp, array($locid));	
+	//$row = $adb->fetch_row($result);
+	$result=mysql_query($sqlFp);
+	$row=mysql_fetch_row($result);	
 	$fp=$row[0];
 	return $fp;
 }
@@ -97,10 +113,12 @@ function getLocId($idrel,$module){
 }
 function setStatusSoto($ventaid,$status){
 	global $adb;
-	$sqlVentaUpdate="UPDATE vtiger_registrodeventas SET statussoto=? WHERE registrodeventasid=?";
-	$result = $adb->pquery($sqlVentaUpdate, array($status,$ventaid));	
-	$update=$adb->getAffectedRowCount($result);
-	if ($update)
+	$sqlVentaUpdate="UPDATE vtiger_registrodeventas SET statussoto=$status WHERE registrodeventasid=$ventaid";
+	//$result = $adb->pquery($sqlVentaUpdate, array($status,$ventaid));	
+	$result=mysql_query($sqlVentaUpdate);	
+	//$update=$adb->getAffectedRowCount($result);
+	$update=mysql_affected_rows();
+	if ($update>0)
 		return true;
 	else
 		return false;
@@ -110,9 +128,11 @@ function getPagosVerificados($ventaid){
 	$cont=0;
 	$sqlpag ="SELECT registrodepagosid, pagostatus FROM vtiger_registrodepagos as r ";
 	$sqlpag.="INNER JOIN vtiger_crmentity as e ON r.registrodepagosid=e.crmid ";
-	$sqlpag.="WHERE e.deleted=0 AND registrodeventasid=? ";
-	$qrypag=$adb->pquery($sqlpag, array($ventaid));	
-	while ($rowpag=$adb->fetch_row($qrypag)) {
+	$sqlpag.="WHERE e.deleted=0 AND registrodeventasid=$ventaid ";
+	//$qrypag=$adb->pquery($sqlpag, array($ventaid));	
+	$qrypag=mysql_query($sqlpag);	
+	//while ($rowpag=$adb->fetch_row($qrypag)) {
+	while ($rowpag=mysql_fetch_row($qrypag)) {
 		$pagoid=$rowpag[0];
 		$status=$rowpag[1];
 		if ($status=='Verificado'){
