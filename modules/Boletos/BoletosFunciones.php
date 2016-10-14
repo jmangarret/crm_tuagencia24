@@ -1,5 +1,6 @@
 <?php
-include_once('../../config.inc.php');   
+//include_once('../../config.inc.php');   
+include_once('config.inc.php');   
 $con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['db_password']);
 $db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
