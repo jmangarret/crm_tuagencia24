@@ -101,6 +101,8 @@ if ($accion=="procesarLocalizadores"){
 					$cont++;						
 				}
 			}
+		}else{
+			$response="Ya procesado";	
 		}
 	}
 	if (($cont>0) && ($sin_contactos==0)){//se procesaron todos

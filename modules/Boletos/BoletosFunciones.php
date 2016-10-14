@@ -1,6 +1,6 @@
 <?php
 //include_once('../../config.inc.php');   
-include_once('config.inc.php');   
+//include_once('config.inc.php');   
 $con = mysql_connect($dbconfig['db_server'],$dbconfig['db_username'],$dbconfig['db_password']);
 $db  = mysql_select_db($dbconfig['db_name']);
 function esVentaSoto($ventaid){
@@ -50,13 +50,13 @@ function validarPasaportes($locid){
 	$cont=0;
 	$sqlBol ="SELECT * FROM vtiger_boletos  ";
 	$sqlBol.="INNER JOIN vtiger_crmentity ON vtiger_boletos.boletosid = vtiger_crmentity.crmid ";
-	$sqlBol.=" WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = $locid";
+	$sqlBol.="WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = $locid";
 	//$resBol = $adb->pquery($sqlSoto, array($locid));	
 	$resBol = mysql_query($sqlBol);	
 	//while ($rowBol = $adb->fetch_array($resBol)){
 	while ($rowBol = mysql_fetch_array($resBol)){
 		$boletosid=$rowBol["boletosid"];
-		$sql = "SELECT attachmentsid FROM vtiger_attachments
+		$sql = "SELECT vtiger_attachments.attachmentsid FROM vtiger_attachments
 					INNER JOIN vtiger_seattachmentsrel ON vtiger_seattachmentsrel.attachmentsid = vtiger_attachments.attachmentsid
 					INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_attachments.attachmentsid
 					WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = $boletosid
@@ -66,7 +66,7 @@ function validarPasaportes($locid){
 		//$numrows = $adb->num_rows($result);	
 		$numrows=mysql_num_rows($result);
 		//El query puede devolver muchos registros de todas las veces que se le haya adjuntado pasaporte	
-		if ($numrows>0){
+		if (!$result || $numrows==0){
 			$cont++;
 		}
 	}	

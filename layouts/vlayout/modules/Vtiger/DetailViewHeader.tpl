@@ -55,7 +55,9 @@
 												"accion" : "procesarLocalizadores",					
 												"gds" 	: response,					
 												"id" : ids1					
-											};														
+											};			
+											alert(response);
+
 											if (response=="Localizador sin Boletos"){
 												bootbox.alert("El localizador no posee Boletos SOTO registrados.");
 												return false;
@@ -85,6 +87,9 @@
 													}
 													if (response2=="Fallido"){
 														bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
+													}													
+													if (response2=="Ya procesado"){
+														bootbox.alert("El localizador ya fue procesado, posee un registro de ventas asociado."); 											
 													}	
 												} 
 											});	

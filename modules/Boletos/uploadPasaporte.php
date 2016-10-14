@@ -8,6 +8,7 @@ mysql_select_db($bd);
 
 $id=$_REQUEST["id"];
 $output_dir=$_REQUEST["ruta"];
+$output_dir="uploads/";
 $user=$_REQUEST["user"];
 $fecha=date("Y-m-d H:i:s");
 
@@ -16,28 +17,6 @@ if(isset($_FILES["myfile"]))
 	$ret = array();
 	
 	$error =$_FILES["myfile"]["error"];
-	//You need to handle  both cases
-	//If Any browser does not support serializing of multiple files using FormData() 
-	if(!is_array($_FILES["myfile"]["name"])) //single file
-	{
- 	 	$fileName = $_FILES["myfile"]["name"];
- 	 	$fileName=$id."_".$fileName;
- 		copy($_FILES["myfile"]["tmp_name"],"../../".$output_dir.$fileName);
-    	$ret[]= $fileName;
-	}
-	else  //Multiple files, file[]
-	{
-	  $fileCount = count($_FILES["myfile"]["name"]);
-	  for($i=0; $i < $fileCount; $i++)
-	  {
-	  	$fileName = $_FILES["myfile"]["name"][$i];
-		move_uploaded_file($_FILES["myfile"]["tmp_name"][$i],"../../".$output_dir.$fileName);
-	  	$ret[]= $fileName;
-	  }
-	
-	}
-	
-	$filetype =$_FILES["myfile"]["type"];
 
 	$sql="SELECT passenger FROM vtiger_boletos WHERE boletosid=".$id;
 	$qry=mysql_query($sql);
@@ -48,11 +27,37 @@ if(isset($_FILES["myfile"]))
 	$resultIdCrm=mysql_fetch_row($IdCrm);
 	$crmId=$resultIdCrm[0];
 
+	//You need to handle  both cases
+	//If Any browser does not support serializing of multiple files using FormData() 
+	if(!is_array($_FILES["myfile"]["name"])) //single file
+	{
+ 	 	$fileName = $_FILES["myfile"]["name"];
+ 	 	$fileNameST=$crmId."_".$id."_".$fileName;
+ 	 	$fileNameBD=$id."_".$fileName;
+ 	 	//$fileName=$id."_".$fileName;
+ 		//copy($_FILES["myfile"]["tmp_name"],"../../".$output_dir.$fileName);
+ 		move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$fileNameST);
+    	$ret[]= $fileNameST;
+	}
+	else  //Multiple files, file[]
+	{
+	  $fileCount = count($_FILES["myfile"]["name"]);
+	  for($i=0; $i < $fileCount; $i++)
+	  {
+	  	$fileName = $_FILES["myfile"]["name"][$i];
+		move_uploaded_file($_FILES["myfile"]["tmp_name"][$i],$output_dir.$fileNameST);
+	  	$ret[]= $fileNameST;
+	  }
+	
+	}
+	
+	$filetype =$_FILES["myfile"]["type"];
+
 	$sqlSetCrm="CALL setCrmEntity('Boletos Attachment','$pasajero','$fecha',$crmId,$user)";
 	$setCrm=mysql_query($sqlSetCrm);
 
 	$sql2 ="insert into vtiger_attachments(attachmentsid, name, description, type, path) ";
-	$sql2.="values($crmId, '$fileName', NULL, '$filetype', '$output_dir')";
+	$sql2.="values($crmId, '$fileNameBD', NULL, '$filetype', 'modules/Boletos/$output_dir')";
 	mysql_query($sql2);
 
 	//si existe
@@ -62,7 +67,7 @@ if(isset($_FILES["myfile"]))
 	$sql3 = "insert into vtiger_seattachmentsrel values($id, $crmId)";
 	mysql_query($sql3);
 
-	chmod($fileName, 755);
+	chmod("$output_dir.$fileName", 777);
 	
     echo json_encode($ret);
  }

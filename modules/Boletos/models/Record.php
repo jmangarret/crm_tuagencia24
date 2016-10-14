@@ -31,9 +31,10 @@ class Boletos_Record_Model extends Vtiger_Record_Model {
 			$imageDetails[] = array(
 					'id' => $imageId,
 					'orgname' => $imageOriginalName,
-					'path' => $imagePath.$imageId,
+					'path' => $imagePath.$imageId,					
 					'name' => $imageName
 			);
+			//'path' => $imagePath.$imageId,
 		}
 		return $imageDetails;
 	}

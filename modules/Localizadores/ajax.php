@@ -30,18 +30,18 @@ if ($_REQUEST["accion"]=="getNumBoletos"){
 if ($_REQUEST["accion"]=="valBoletosSoto"){
 	$essoto=false;
 	$boletos=0;
-	$pasaportes=0;
+	$valpasaportes=0;
 	$gds=getLocGds($_REQUEST["idloc"]);	
 	if ($gds=="Servi"){
 		$essoto=true;
 		$response=$gds;
 		//Validamos que hallan boletos asociados y que tengan todos pasaporte adjunto
 		$boletos=getCantBoletos($_REQUEST["idloc"]);
-		$pasaportes=validarPasaportes($_REQUEST["idloc"]);		
+		$valpasaportes=validarPasaportes($_REQUEST["idloc"]);		
 
 	}
 	if ($boletos==0 && $essoto) 		$response="Localizador sin Boletos";
-	if ($boletos>0 && $pasaportes==0) 	$response="Boletos sin Pasaporte";
+	if ($boletos>0 && $valpasaportes>0) $response="Boletos sin Pasaporte";
 
 	echo $response;
 }
