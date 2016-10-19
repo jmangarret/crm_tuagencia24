@@ -1625,48 +1625,7 @@ class CRMEntity {
 				$adb->pquery("INSERT INTO vtiger_crmentityrel(crmid, module, relcrmid, relmodule) VALUES(?,?,?,?)", Array($crmid, $module, $relcrmid, $with_module));
 
 				// jmangarret 09ago2016 Enviar correo si es SOTO
-				if ($module=="RegistroDeVentas" && $with_module=="Localizadores"){
-					$log->debug("Enviando correo SOTO en CRMEntity.php");
-					$host= $_SERVER["HTTP_HOST"];
-
-					$sql="SELECT localizador FROM vtiger_localizadores WHERE localizadoresid=?";
-					$result = $adb->pquery($sql, array($relcrmid));	
-					$row = $adb->fetch_row($result);
-					$idloc=$relcrmid;
-					$loc=$row[0];
-		
-					//Verificamos si es un SOTO
-					/*
-					$sqlSoto="SELECT COUNT(*) FROM vtiger_localizadores WHERE localizadoresid=? AND gds= ?";
-					$result = $adb->pquery($sqlSoto, array($relcrmid,"Servi"));	
-					$row = $adb->fetch_row($result);
-					$esSoto=$row[0];
-					*/
-					$esSoto=esVentaSoto($crmid);
-					$esServi=getLocGds($relcrmid);
-					$valPass=validarPasaportes($relcrmid);
-
-					if ($esSoto || $esServi){
-						if ($valPass>0){
-							$email="tuagencia.sistemas01@gmail.com";
-							$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
-							$mensaje=getPlantillaVerificarDatos($idloc, $loc);					
-							$envio=enviarEmail($email,$asunto,$mensaje);					
-						}else{
-							//Notificar falta de pasaporte adjunto
-						}
-					}				
-					
-					if ($envio){
-						//SP BD setCrmEntityRel actualiza el status Soto de la Venta a Reservado
-						$log->debug("correo SOTO Enviado");
-						
-					}else{
-						$log->debug("Error Enviando correo SOTO ".$envio);
-					}
-
-				}
-				//Fin enviar correo
+				include_once("modules/Boletos/relCrmEntitySoto.php");
 
 			}
 		}

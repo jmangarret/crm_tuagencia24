@@ -48,9 +48,11 @@ function getCantBoletos($locid){
 function validarPasaportes($locid){
 	global $adb;
 	$cont=0;
-	$sqlBol ="SELECT * FROM vtiger_boletos  ";
-	$sqlBol.="INNER JOIN vtiger_crmentity ON vtiger_boletos.boletosid = vtiger_crmentity.crmid ";
-	$sqlBol.="WHERE vtiger_crmentity.deleted=0 AND vtiger_boletos.localizadorid = $locid";
+	$sqlBol="SELECT vtiger_boletos.* FROM vtiger_boletos INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_boletos.boletosid 
+				INNER JOIN vtiger_crmentityrel ON (vtiger_crmentityrel.relcrmid = vtiger_crmentity.crmid OR vtiger_crmentityrel.crmid = vtiger_crmentity.crmid) 
+				LEFT JOIN vtiger_users ON vtiger_users.id = vtiger_crmentity.smownerid 
+				LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid 
+				WHERE vtiger_crmentity.deleted = 0 AND (vtiger_crmentityrel.crmid = $locid OR vtiger_crmentityrel.relcrmid = $locid)";
 	//$resBol = $adb->pquery($sqlSoto, array($locid));	
 	$resBol = mysql_query($sqlBol);	
 	//while ($rowBol = $adb->fetch_array($resBol)){
@@ -219,6 +221,26 @@ function getPlantillaEmitido($ventaid, $label){
 	<p>Hola, </p>
 	<p>Se ha completado la emisión SOTO. Por favor complete los Numeros de Boletos de siguiente Registro de Venta:</p>					
 	<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$ventaid."'>".$label."</a></p>		
+	<BR><BR><BR>
+	<i>
+	Gracias,		
+	<p>Equipo TuAgencia24.com</p>
+	</i>
+	</body> 
+	</html> "; 	
+	return $mensaje;
+}
+function getPlantillaSubirPasaporte($locid, $label){
+	$host= $_SERVER["HTTP_HOST"];
+	$mensaje = " 
+	<html>
+	<head> 
+	<title>Info - Tu Agencia 24</title> 
+	</head> 
+	<body> 
+	<p>Hola, </p>
+	<p>El siguiente Localizador tiene pasaportes pendientes por subir:</p>					
+	<p><b>Localizador: </b> <a href='http://".$host."/index.php?module=Localizadores&view=Detail&record=".$locid."'>".$label."</a></p>		
 	<BR><BR><BR>
 	<i>
 	Gracias,		

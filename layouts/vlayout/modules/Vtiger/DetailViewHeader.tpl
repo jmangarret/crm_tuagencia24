@@ -56,8 +56,7 @@
 												"gds" 	: response,					
 												"id" : ids1					
 											};			
-											alert(response);
-
+											
 											if (response=="Localizador sin Boletos"){
 												bootbox.alert("El localizador no posee Boletos SOTO registrados.");
 												return false;

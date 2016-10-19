@@ -26,20 +26,31 @@ class RegistroDePagosHandler extends VTEventHandler {
 				$esSoto=esVentaSoto($idVenta);				
 				$idloc=getLocId($idVenta,"RegistroDeVentas");
 				$cantBoletos=getCantBoletos($idloc);
+				$valPass=validarPasaportes($idloc);
 				//Verificamos Pagos
 				$pagosCheck=getPagosVerificados($idVenta);
 				$log->debug("Entering handle event pagoscheck esSoto:".$esSoto ."/pagoscheck:".$pagosCheck." /cantBoletos:".$cantBoletos);
-				if ($pagosCheck && $esSoto && $cantBoletos>0){					
-					$log->debug("Entering handle event pagoscheckeados esSoto ");					
+				if ($pagosCheck && $esSoto && $cantBoletos>0 && !$valPass){						
+					$log->debug("Entering handle event pagoscheckeados esSoto ");										
+					$log->debug("Entering handle event pagoscheckeados esSoto y subio pasaportes");					
 					$email="tuagencia.sistemas01@gmail.com";					
 					$asunto="SOTO CRM - Emitir SOTO (Pago Verificado)";
 					$mensaje = getPlantillaEmitirSoto($idVenta,$venta);
-					$envio=enviarEmail($email,$asunto,$mensaje);				
-				}				
+					$envio=enviarEmail($email,$asunto,$mensaje);
+					if ($envio){
+						setStatusSoto($idVenta,"Emitir Soto");
+					}									
+				}		
+				//Validar pasaporte si es primera vez que carga pago (Por verificar)
+				if ($esSoto && $cantBoletos>0 && $valPass){
+					//Notificar falta de pasaporte adjunto
+					$log->debug("Entering handle event pagoscheckeados esSot, no subio pasaportes");					
+					$email="tuagencia.sistemas01@gmail.com";
+					$asunto="SOTO CRM - Subir Pasaporte (Reservado de SOTO)";
+					$mensaje=getPlantillaSubirPasaporte($idloc, $loc);					
+					$envio=enviarEmail($email,$asunto,$mensaje);					
+				}		
 				
-				if ($envio){
-					setStatusSoto($idVenta,"Emitir Soto");
-				}
 
         	}
     	}

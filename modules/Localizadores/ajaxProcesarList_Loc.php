@@ -88,14 +88,26 @@ if ($accion=="procesarLocalizadores"){
 						$result = mysql_query($sql);	
 						$row = mysql_fetch_row($result);
 						$loc=$row[0];
+						$boletos=getCantBoletos($idloc);
+						if ($boletos>0){
+							$valPass=validarPasaportes($idloc);
+							if ($valPass==0 || !$valPass){
+								$email="tuagencia.sistemas01@gmail.com";
+								$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
+								$mensaje=getPlantillaVerificarDatos($idloc, $loc);					
+								$envio=enviarEmail($email,$asunto,$mensaje);	
+								if ($envio){
+									setStatusSoto($crmid,"Reservado");
+								}				
+							}else{
+								//Notificar falta de pasaporte adjunto
+								$email="tuagencia.sistemas01@gmail.com";
+								$asunto="SOTO CRM - Subir Pasaporte (Reservado de SOTO)";
+								$mensaje=getPlantillaSubirPasaporte($idloc, $loc);					
+								$envio=enviarEmail($email,$asunto,$mensaje);					
+							}	
+						}								
 
-						$email="tuagencia.sistemas01@gmail.com";
-						$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
-						$mensaje=getPlantillaVerificarDatos($idloc, $loc);
-						$envio=enviarEmail($email,$asunto,$mensaje);			
-						if ($envio){
-							setStatusSoto($crmid,"Reservado");
-						}
 					}
 					//fin
 					$cont++;						
