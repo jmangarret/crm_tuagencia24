@@ -14,46 +14,6 @@ mysql_select_db($bd);
 $module=$_REQUEST["module"];
 $id=$_REQUEST["id"];
 $user=$_REQUEST["user"];
-///FUNCION PARA CAPTURAR RUTA DE UPLOADS DEL CRM
-function initStorageFileDirectory() {
-	$filepath = 'storage/';
-
-	$year  = date('Y');
-	$month = date('F');
-	$day   = date('j');
-	$week  = '';
-
-	if (!is_dir($filepath . $year)) {
-		//create new folder
-		mkdir($filepath . $year);
-	}
-
-	if (!is_dir($filepath . $year . "/" . $month)) {
-		//create new folder
-		mkdir($filepath . "$year/$month");
-	}
-
-	if ($day > 0 && $day <= 7)
-		$week = 'week1';
-	elseif ($day > 7 && $day <= 14)
-		$week = 'week2';
-	elseif ($day > 14 && $day <= 21)
-		$week = 'week3';
-	elseif ($day > 21 && $day <= 28)
-		$week = 'week4';
-	else
-		$week = 'week5';
-
-	if (!is_dir($filepath . $year . "/" . $month . "/" . $week)) {
-		//create new folder
-		mkdir($filepath . "$year/$month/$week");
-	}
-
-	$filepath = $filepath . $year . "/" . $month . "/" . $week . "/";
-
-	return $filepath;
-}
-$output_dir = initStorageFileDirectory();
 
 //INICIO DE REQUESTS
 if ($module=="Boletos"){
@@ -69,8 +29,7 @@ if ($module=="Boletos"){
 	        fileName:"myfile",
 	        formData: {
 	        	"id":"<?php echo $id; ?>",
-	        	"user":"<?php echo $user; ?>",
-	        	"ruta":"<?php echo $output_dir; ?>",
+	        	"user":"<?php echo $user; ?>",	        	
 	        },
 	        allowDuplicates: false,
 	        multiple: false,	        
@@ -82,13 +41,25 @@ if ($module=="Boletos"){
 	        maxFileCount: 1,
 	        maxFileCountErrorStr:"Cant Maxima de Archivos: ",	
 	        duplicateErrorStr:"No permitido. Archivo ya existe.",
-
 	        
 	    });
 	});
 	</script>
-	<?
+	<div id="fileuploader"></div>
+<?php
+	$sqlPass="SELECT vtiger_attachments.attachmentsid, vtiger_attachments.name, vtiger_attachments.path FROM vtiger_attachments
+		INNER JOIN vtiger_seattachmentsrel ON vtiger_seattachmentsrel.attachmentsid = vtiger_attachments.attachmentsid
+		INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_attachments.attachmentsid
+		WHERE vtiger_crmentity.setype = 'Boletos Attachment' and vtiger_seattachmentsrel.crmid = $id 
+		ORDER BY vtiger_attachments.attachmentsid DESC";
+	$qryPass=mysql_query($sqlPass);
+	$idAttachment	=mysql_result($qryPass, 0, "attachmentsid");
+	$nameAttachment	=mysql_result($qryPass, 0, "name");
+	$pathAttachment	=mysql_result($qryPass, 0, "path");
+	chmod($pathAttachment.$idAttachment."_".$nameAttachment,777);	
+	echo "<img 	src='".$pathAttachment.$idAttachment."_".$nameAttachment."' 
+				alt='".$pathAttachment.$idAttachment."_".$nameAttachment."' 
+				title='".$pathAttachment.$idAttachment."_".$nameAttachment."'>";
 }
 
 ?>
-<div id="fileuploader"></div>

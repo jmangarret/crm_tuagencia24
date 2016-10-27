@@ -7,7 +7,6 @@ mysql_connect("localhost",$user,$pass);
 mysql_select_db($bd);
 
 $id=$_REQUEST["id"];
-$output_dir=$_REQUEST["ruta"];
 $output_dir="uploads/";
 $user=$_REQUEST["user"];
 $fecha=date("Y-m-d H:i:s");
@@ -36,6 +35,7 @@ if(isset($_FILES["myfile"]))
  	 	$fileNameBD=$id."_".$fileName;
  	 	//$fileName=$id."_".$fileName;
  		//copy($_FILES["myfile"]["tmp_name"],"../../".$output_dir.$fileName);
+ 		chmod($_FILES["myfile"]["tmp_name"], 777);
  		move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$fileNameST);
     	$ret[]= $fileNameST;
 	}

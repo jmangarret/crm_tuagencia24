@@ -33,16 +33,25 @@ class RegistroDeVentasHandler extends VTEventHandler {
         	//jmangarret oct2016 - WORKFLOW SOTO - Status Emitido
         	$gds=getVentaGds($id);
         	$tipodeventa=$_REQUEST["registrodeventastype"];
+        	$numerodeventa=getNumeroDeVenta($id);
         	$statussoto=$_REQUEST["statussoto"];
         	if ($statussoto=="Emitido"){
         		if ($tipodeventa=="Boleto SOTO" || $gds=="Servi"){
         			$email="tuagencia.sistemas01@gmail.com";
 					$asunto="SOTO CRM - Emitido (Actualizar Boletos)";
-					$mensaje = getPlantillaEmitido($idVenta,$venta);	
+					$mensaje = getPlantillaEmitido($id,$numerodeventa);	
 					$envio=enviarEmail($email,$asunto,$mensaje);				
         		}	
         	}
-        	$log->debug("Entering handle event venta gds:".$gds ."/tipo:".$tipodeventa."/statussoto:".$statussoto);						
+        	if ($statussoto=="No Emitido"){
+        		if ($tipodeventa=="Boleto SOTO" || $gds=="Servi"){
+        			$email="tuagencia.sistemas01@gmail.com";
+					$asunto="SOTO CRM - NO Emitido (Anular Boletos)";
+					$mensaje = getPlantillaNoEmitido($id,$numerodeventa);	
+					$envio=enviarEmail($email,$asunto,$mensaje);				
+        		}	
+        	}
+        	$log->debug("Entering handle event venta gds:".$gds .$id.$numerodeventa."/tipo:".$tipodeventa."/statussoto:".$statussoto);						
         	
         }
     }

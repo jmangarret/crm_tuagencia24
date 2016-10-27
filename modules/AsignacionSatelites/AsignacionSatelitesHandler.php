@@ -19,10 +19,11 @@ class AsignacionSatelitesHandler extends VTEventHandler {
         		foreach ($accountid as $elem) {
 	            	$name=trim($elem);
 	            	$listaSat.="<li>".$name."</li>";
-	            	$sqlEmail="SELECT email1 FROM vtiger_account WHERE accountname LIKE '%".$name."%'";
+	            	$sqlEmail="SELECT email1,accountid FROM vtiger_account WHERE accountname LIKE '%".$name."%'";
 	            	$qryEmail=$adb->pquery($sqlEmail, array());
 	            	$row = $adb->fetch_row($qryEmail);
 					$email=$row[0];
+					$accid=$row[1];
 					$asunto="Info TuAgencia24 - Asignacion Asesora";
 					//SI LA CUENTA SATELITE NO TIENE EMAIL ENVIAMOS CORREO DE ERROR AL ASESOR
 					if (!$email){
@@ -66,12 +67,20 @@ class AsignacionSatelitesHandler extends VTEventHandler {
 	            		$qrycheck=$adb->pquery($sqlcheck, array());
 	            		$rowcheck = $adb->fetch_row($qrycheck);
 						$asig=$rowcheck[0];					
-						if (!$asig)
+						//VALIDAMOS SI ES EL MISMO ASESOR
+						$sqlAse="SELECT smownerid FROM vtiger_crmentity WHERE setype='Accounts' AND crmid=?";
+						$qryAse=$adb->pquery($sqlAse, array($accid));
+						$rowAse = $adb->fetch_row($qryAse);
+						$userid2=$rowAse[0];			
+
+						if (!$asig || ($userid<>$userid2))
 						$envio=enviarEmail($email,$asunto,$mensaje);	
 
 						if ($envio) {
 							$sqlcheck="UPDATE vtiger_account SET asignacionenviada=1 WHERE accountname LIKE '%".$name."%'";
 	            			$qrycheck=$adb->pquery($sqlcheck, array());
+	            			$sqlacc="UPDATE vtiger_crmentity SET smownerid=? WHERE setype='Accounts' AND crmid=?";
+	            			$qryacc=$adb->pquery($sqlacc, array($userid,$accid));
 	            		}		
 
 						$log->debug("Entering handle event ".$mensaje);

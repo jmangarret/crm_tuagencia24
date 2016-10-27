@@ -30,8 +30,7 @@ class RegistroDePagosHandler extends VTEventHandler {
 				//Verificamos Pagos
 				$pagosCheck=getPagosVerificados($idVenta);
 				$log->debug("Entering handle event pagoscheck esSoto:".$esSoto ."/pagoscheck:".$pagosCheck." /cantBoletos:".$cantBoletos);
-				if ($pagosCheck && $esSoto && $cantBoletos>0 && !$valPass){						
-					$log->debug("Entering handle event pagoscheckeados esSoto ");										
+				if ($pagosCheck && $esSoto && $cantBoletos>0 && !$valPass){											
 					$log->debug("Entering handle event pagoscheckeados esSoto y subio pasaportes");					
 					$email="tuagencia.sistemas01@gmail.com";					
 					$asunto="SOTO CRM - Emitir SOTO (Pago Verificado)";

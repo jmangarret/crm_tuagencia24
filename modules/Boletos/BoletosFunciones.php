@@ -14,6 +14,15 @@ function esVentaSoto($ventaid){
 	$esSoto=$row[0];
 	return $esSoto;
 }
+function getNumeroDeVenta($ventaid){
+	global $adb;
+	$sqlSoto="SELECT registrodeventasname FROM vtiger_registrodeventas WHERE registrodeventasid=$ventaid";
+	$result=mysql_query($sqlSoto);
+	$row=mysql_fetch_row($result);
+	
+	$venta=$row[0];
+	return $venta;
+}
 function getVentaGds($ventaid){
 	global $adb;
 	$sqlSoto="SELECT gds FROM vtiger_localizadores WHERE registrodeventasid=$ventaid";
@@ -72,7 +81,7 @@ function validarPasaportes($locid){
 			$cont++;
 		}
 	}	
-	return $cont;
+	return $cont; //Si es mayor que cero faltan pasaportes por adjuntar
 }
 function getFormaDePago($locid){
 	global $adb;
@@ -220,6 +229,26 @@ function getPlantillaEmitido($ventaid, $label){
 	<body> 
 	<p>Hola, </p>
 	<p>Se ha completado la emisión SOTO. Por favor complete los Numeros de Boletos de siguiente Registro de Venta:</p>					
+	<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$ventaid."'>".$label."</a></p>		
+	<BR><BR><BR>
+	<i>
+	Gracias,		
+	<p>Equipo TuAgencia24.com</p>
+	</i>
+	</body> 
+	</html> "; 	
+	return $mensaje;
+}
+function getPlantillaNoEmitido($ventaid, $label){
+	$host= $_SERVER["HTTP_HOST"];
+	$mensaje = " 
+	<html>
+	<head> 
+	<title>Info - Tu Agencia 24</title> 
+	</head> 
+	<body> 
+	<p>Hola, </p>
+	<p>Se ha cancelado o anulado la emisión de un SOTO. Por favor reutilice el Registro de Venta o solicite su anulacion:</p>					
 	<p><b>Registro de Venta: </b> <a href='http://".$host."/index.php?module=RegistroDeVentas&view=Detail&record=".$ventaid."'>".$label."</a></p>		
 	<BR><BR><BR>
 	<i>
