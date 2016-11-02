@@ -97,24 +97,6 @@
                 </tr>
             </thead>
             {foreach item=RELATED_RECORD from=$RELATED_RECORDS}
-            {assign var=MONEDA value=$RELATED_RECORD->get('currency')}            
-            {if $RELATED_RECORD->get('cantidad')>0}
-                {if $MONEDA eq 'VEF'}
-                    {$TOTALBS = $TOTALBS+$RELATED_RECORD->get('amount')* $RELATED_RECORD->get('cantidad')}                               
-                {/if}
-                {if $MONEDA eq 'USD'}
-                    {$TOTALDS = $TOTALDS+$RELATED_RECORD->get('amount')* $RELATED_RECORD->get('cantidad')}                               
-                {/if}                
-            {else}                
-                {if $MONEDA eq 'VEF'}
-                    {$TOTALBS = $TOTALBS+$RELATED_RECORD->get('amount')}
-                {/if}                
-                {if $MONEDA eq 'USD'}
-                    {$TOTALDS = $TOTALDS+$RELATED_RECORD->get('amount')}
-                {/if}                
-
-            {/if}
-            
                 <tr class="listViewEntries" data-id='{$RELATED_RECORD->getId()}' data-recordUrl='{$RELATED_RECORD->getDetailViewUrl()}'>
                     {foreach item=HEADER_FIELD from=$RELATED_HEADERS}
                         {assign var=RELATED_HEADERNAME value=$HEADER_FIELD->get('name')}
@@ -140,7 +122,7 @@
                                         {/if}
 
                                     </span>
-                                        {if $MODULE eq 'Localizadores'}  
+                                        {if $RELATED_MODULE->get('name') eq 'Boletos' or $RELATED_MODULE->get('name') eq 'RegistroDePagos' }  
                                         <script type="text/javascript">
                                             function popup(url,ancho,alto) {
                                             var posicion_x; 
@@ -150,8 +132,8 @@
                                             window.open(url, "Subir archivo", "width="+ancho+",height="+alto+",menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left="+posicion_x+",top="+posicion_y+"");
                                             }
                                             </script>                                                    
-                                        <a href="javascript:popup('upload.php?module=Boletos&id={$RELATED_RECORD->getId()}&user={$USER_MODEL->get('id')}',600,500)">
-                                            <img class="alignMiddle" src="themes/images/icono_user.png" title="Adjuntar Pasaporte">
+                                        <a href="javascript:popup('upload.php?module={$RELATED_MODULE->get('name')}&id={$RELATED_RECORD->getId()}&user={$USER_MODEL->get('id')}',600,500)">
+                                            &nbsp;<img class="alignMiddle" src="themes/images/attachments.gif" title="Subir Archivo">
                                         </a>
                                         {/if}
                                 </div>
@@ -162,12 +144,13 @@
                 </tr>
             {/foreach}
 
-            {if $MODULE eq 'RegistroDeVentas'}
+            {if $TOTALBS>0 || $TOTALDS>0 }
                 <tr class="listViewHeaders">
                     <th class="medium"><b>TOTAL GENERAL Bs:</b> {$TOTALBS}</td>
-                    <th class="medium"><b>TOTAL GENERAL $:</b> {$TOTALDS} </td>
+                    <th class="medium"><b>TOTAL GENERAL $: </b> {$TOTALDS}</td>
                 </tr>
-
+            {/if}
+            {if $MODULE eq 'RegistroDeVentas'}
                 <script type="text/javascript">                                                    
                  $(document).ready(function() {                                                  
                     if(window.location.href.indexOf('module=RegistroDeVentas&relatedModule=RegistroDePagos&view=Detail')!== -1) {

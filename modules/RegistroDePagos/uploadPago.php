@@ -7,10 +7,19 @@ mysql_connect("localhost",$user,$pass);
 mysql_select_db($bd);
 
 $id=$_REQUEST["id"];
-$output_dir=$_REQUEST["ruta"];
-$output_dir="storage/";
 $user=$_REQUEST["user"];
 $fecha=date("Y-m-d H:i:s");
+
+$filepath="storage/";
+$year  = date('Y');
+$month = date('F');
+if (!is_dir($filepath . $year)) {
+	mkdir($filepath . $year);
+}
+if (!is_dir($filepath . $year . "/" . $month)) {
+	mkdir($filepath . "$year/$month");
+}
+$output_dir=$filepath;
 
 if(isset($_FILES["myfile"]))
 {
