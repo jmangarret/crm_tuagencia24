@@ -17,31 +17,9 @@ $field1->table='vtiger_boletos';
 $field1->column='pasaporte';
 $field1->columntype = 'VARCHAR(100)';
 $field1->uitype = 69; //file
-$field1->typeofdata = 'V~M';
+$field1->typeofdata = 'V~O';
 $block->addField($field1);
 
-/*
-$field0=new Vtiger_Field();
-$field0->label='Pasaporte Verificado';
-$field0->name='pasaportecheck';
-$field0->table='vtiger_boletos';
-$field0->column='pasaportecheck';
-$field0->columntype = 'VARCHAR(2)';
-$field0->uitype = 56; //check
-$field0->typeofdata = 'V~O';
-$field0->defaultvalue = '0';
-$block->addField($field0);
-
-$field2=new Vtiger_Field();
-$field2->label='Observacion';
-$field2->name='observacion';
-$field2->table='vtiger_boletos';
-$field2->column='observacion';
-$field2->columntype = 'VARCHAR(100)';
-$field2->uitype = 19; //textarea
-$field2->typeofdata = 'V~O';
-$block->addField($field2);
-*/
 $block->save($module);
 $module->initWebservice();
 echo 'Code successfully executed';

@@ -14,12 +14,12 @@ $filepath="storage/";
 $year  = date('Y');
 $month = date('F');
 if (!is_dir($filepath . $year)) {
-	mkdir($filepath . $year);
+	mkdir($filepath . $year);	
 }
 if (!is_dir($filepath . $year . "/" . $month)) {
-	mkdir($filepath . "$year/$month");
+	mkdir($filepath . "$year/$month");	
 }
-$output_dir=$filepath;
+$output_dir=$filepath.$year."/".$month."/";
 
 if(isset($_FILES["myfile"]))
 {
@@ -76,7 +76,7 @@ if(isset($_FILES["myfile"]))
 	$sql3 = "insert into vtiger_seattachmentsrel values($id, $crmId)";
 	mysql_query($sql3);
 
-	chmod("$output_dir.$fileName", 777);
+	chmod("$output_dir.$fileNameST", 777);
 	
     echo json_encode($ret);
  }

@@ -14,7 +14,7 @@ mysql_select_db($bd);
 $apartirde=23781;
 
 //SQL PARA VENTAS SIN LOCALIZADORES
-$sql="	SELECT 'RegistroDeVentas' AS Modulo, 'Venta sin Localizador' AS Error, e.crmid,r.registrodeventasname as referencia,e.smownerid				
+$sql="	SELECT 'RegistroDeVentas' AS Modulo, 'Venta sin Localizador' AS Error, e.crmid,r.registrodeventasname as referencia,e.smownerid, e.createdtime				
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_registrodeventas AS r ON r.registrodeventasid=e.crmid 				
 		WHERE r.registrodeventastype LIKE '%Boleto%' AND e.deleted = 0 AND e.crmid>$apartirde AND e.crmid NOT IN 
@@ -26,7 +26,7 @@ $sql="	SELECT 'RegistroDeVentas' AS Modulo, 'Venta sin Localizador' AS Error, e.
 
 //SQL PARA LOCALIZADORES SOTO SIN BOLETOS
 $sql.=" UNION ";
-$sql.="	SELECT 'Localizadores' AS Modulo, 'Localizador sin Boletos' AS Error, e.crmid,l.localizador as referencia,e.smownerid				
+$sql.="	SELECT 'Localizadores' AS Modulo, 'Localizador sin Boletos' AS Error, e.crmid,l.localizador as referencia,e.smownerid, e.createdtime				
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=e.crmid 				
 		WHERE l.gds LIKE '%Servi%' AND e.deleted = 0 AND e.crmid>$apartirde AND e.crmid NOT IN 
@@ -39,7 +39,7 @@ $sql.="	SELECT 'Localizadores' AS Modulo, 'Localizador sin Boletos' AS Error, e.
 
 //SQL PARA VALIDAR NUM. DE DIGITOS DEL BOLETO, DEBE TENER MINIMO 13 CARACTERES O SER MAYOR QUE CERO
 $sql.=" UNION ";
-$sql.="	SELECT 'Boletos' AS Modulo, 'Num. de Boleto Errado' AS Error, e.crmid,b.boleto1 as referencia,e.smownerid
+$sql.="	SELECT 'Boletos' AS Modulo, 'Num. de Boleto Errado' AS Error, e.crmid,b.boleto1 as referencia,e.smownerid, e.createdtime
 		FROM  vtiger_crmentity AS e
 		INNER JOIN vtiger_boletos AS b ON b.boletosid=e.crmid 	
 		INNER JOIN vtiger_localizadores AS l ON l.localizadoresid=b.localizadorid					
@@ -57,6 +57,7 @@ $sql.="	SELECT 'Boletos' AS Modulo, 'Num. de Boleto Errado' AS Error, e.crmid,b.
 			<th><b>Modulo</b></th>
 			<th><b>Error</b></th>
 			<th><b>Referencia</b></th>			
+			<th><b>Fecha</b></th>			
 			<th><b>Usuario</b></th>
 		</tr>
 	</thead>
@@ -79,6 +80,7 @@ $sql.="	SELECT 'Boletos' AS Modulo, 'Num. de Boleto Errado' AS Error, e.crmid,b.
 			echo "</td>";
 			echo "<td>".$reg[1]."</td>";
 			echo "<td>".$reg[3]."</td>";
+			echo "<td>".$reg[5]."</td>";
 			echo "<td>".$usuario."</td>";
 			echo "</tr>";
 		}		
