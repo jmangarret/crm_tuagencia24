@@ -19,8 +19,8 @@ $fieldInstance->table = 'vtiger_registrodeventas';
 $fieldInstance->column = 'nrodeticket'; //Must be lower case
 $fieldInstance->label = 'Nro. de Ticket'; //Upper case preceeded by LBL_
 $fieldInstance->columntype = 'VARCHAR(30)'; //
-$fieldInstance->uitype = 1; //textCampo mandatory
-$fieldInstance->typeofdata = 'V~M'; //V=Varchar?, M=Mandatory, O=Optional
+$fieldInstance->uitype = 16; //picklist
+$fieldInstance->typeofdata = 'V~O'; //V=Varchar?, M=Mandatory, O=Optional
 $block->addField($fieldInstance);
 
 $block->save($module);

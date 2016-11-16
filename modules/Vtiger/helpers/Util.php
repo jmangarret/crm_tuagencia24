@@ -253,26 +253,10 @@ class Vtiger_Util_Helper {
         $db = PearDatabase::getInstance();
 
         $query = 'SELECT '.$fieldName.' FROM vtiger_'.$fieldName.' order by sortorderid';
+        //jmangarret nov2016 - Independizacion de cambios personalizados
+        $custom=1;
+        include("UtilCustom.inc.php");
 
-        //jmangarret 18ago2016 valores picklist 15, 16, 33 para cuentas satelites
-        if ($fieldName=="accountid"){
-        	$sqlAsig="SELECT accountid FROM vtiger_asignacionsatelites";
-        	$qryAsig=$db->pquery($sqlAsig, array());
-        	$num_rows = $db->num_rows($qryAsig);
-        	$names="''";
-	        for($i=0; $i<$num_rows; $i++) {				
-	            $acc=$db->query_result($qryAsig,$i,$fieldName);
-	            $exp=explode("|##|", $acc);
-	            foreach ($exp as $elem) {
-	            	$names.="'".trim($elem)."',";
-	            }	            
-	        }
-	        $names.="''";
-        	$query = 'SELECT accountname as accountid FROM vtiger_account WHERE account_type=\'Satelite\' OR account_type=\'Freelance\'';
-        	if (!$_REQUEST["record"])
-        	$query.=' AND accountname NOT IN ('.$names.')';	
-        } 
-        //Fin 18ago2015   
         $values = array();
         $result = $db->pquery($query, array());
         $num_rows = $db->num_rows($result);
