@@ -14,12 +14,12 @@ $filepath="storage/";
 $year  = date('Y');
 $month = date('F');
 if (!is_dir($filepath . $year)) {
-	mkdir($filepath . $year);
+	mkdir($filepath . $year);	
 }
 if (!is_dir($filepath . $year . "/" . $month)) {
-	mkdir($filepath . "$year/$month");
+	mkdir($filepath . "$year/$month");	
 }
-$output_dir=$filepath;
+$output_dir=$filepath.$year."/".$month."/";
 
 if(isset($_FILES["myfile"]))
 {

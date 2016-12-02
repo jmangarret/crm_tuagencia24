@@ -32,7 +32,8 @@ if ($custom==1){ //custom de function getPickListValues
 	//jmangarret - Data source de picklist nro de ticket en Registro de Venta
 	if($fieldName=="nrodeticket")
 	{
-		$query = "SELECT ost_ticket.number as nrodeticket FROM osticket1911.ost_ticket WHERE status_id=3 AND topic_id=19 AND ticket_id>10000 ORDER BY ticket_id DESC"; 
+		$query = "SELECT ost_ticket.number as nrodeticket FROM osticket1911.ost_ticket 
+					WHERE status_id=3 AND topic_id=19 AND ticket_id>16000 ORDER BY ticket_id DESC"; 
 	} 
 	//jmangarret Fin	
 }

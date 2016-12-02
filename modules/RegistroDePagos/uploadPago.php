@@ -66,7 +66,7 @@ if(isset($_FILES["myfile"]))
 	$setCrm=mysql_query($sqlSetCrm);
 
 	$sql2 ="insert into vtiger_attachments(attachmentsid, name, description, type, path) ";
-	$sql2.="values($crmId, '$fileNameBD', NULL, '$filetype', 'modules/RegistrodePagos/$output_dir')";
+	$sql2.="values($crmId, '$fileNameBD', NULL, '$filetype', 'modules/RegistroDePagos/$output_dir')";
 	mysql_query($sql2);
 
 	//si existe
