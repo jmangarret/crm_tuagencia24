@@ -81,10 +81,22 @@ class Vtiger_RelatedList_View extends Vtiger_Index_View {
 		$viewer->assign('IS_DELETABLE', $relationModel->isDeletable());
 		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
 		$viewer->assign('VIEW', $request->get('view'));
-		$viewer->assign('TOTALBS', 0);
-		$viewer->assign('TOTALDS', 0);
-		$viewer->assign('CANTIDAD', 0);
 
+		//jmangarret oct2016 Se agrega nuevo calculo de totales resumen formateado
+		foreach ($models as $key) {
+			$cant=$key->get('cantidad');
+			$monto=$key->get('amount');
+			$moneda=$key->get('currency');
+
+			if (!$cant) 		$cant=1;			
+			if ($moneda=="VEF")	$totBs=$totBs+$monto*$cant;
+			if ($moneda=="USD")	$totDs=$totDs+$monto*$cant;
+		}
+		
+		$viewer->assign('TOTALBS', number_format($totBs,2,'.',','));
+		$viewer->assign('TOTALDS', number_format($totDs,2,'.',','));
+		//Fin
+		
 		return $viewer->view('RelatedList.tpl', $moduleName, 'true');
 	}
 }

@@ -116,6 +116,7 @@ $param=str_replace("::0::", "::1::", $_REQUEST["params"]);
 			<th><b>Item</b></th>
 			<th><b>Ticket</b></th>
 			<th><b>Tema</b></th>
+			<th><b>Cliente</b></th>
 			<th><b>Creado</b></th>
 			<th><b>Actualizado</b></th>
 			<th><b>Abrir Ticket</b></th>
@@ -127,13 +128,28 @@ $param=str_replace("::0::", "::1::", $_REQUEST["params"]);
 		$listado = mysql_query($sql);
 		while($reg= mysql_fetch_row($listado))
 		{
-			$query = "SELECT topic FROM osticket1911.ost_help_topic WHERE topic_id=".$reg[1];
+			$query = "SELECT topic FROM osticket1911.ost_help_topic WHERE topic_id=".$reg[1];			
 			$result=mysql_query($query);
 			$top=mysql_fetch_row($result);
+			$tema=$top[0];
+
+			$query = "SELECT user_id, u.name FROM osticket1911.ost_user AS u INNER JOIN osticket1911.ost_ticket AS t ON u.id=t.user_id WHERE ticket_id=".$reg[4];
+			$result=mysql_query($query);
+			$user_id=mysql_result($result,0,"user_id");
+			$name=mysql_result($result,0,"name");
+
+			$query ="SELECT value FROM osticket1911.ost_form_entry_values AS v INNER JOIN osticket1911.ost_form_entry AS e ON e.id=v.entry_id ";
+			$query.="WHERE v.field_id=3  AND e.object_type='U' AND e.object_id= ".$user_id;
+			$result=mysql_query($query);
+			$telf=mysql_result($result,0);
+			
+			$cliente=$name."<br>".$telf;
+
 			echo "<tr>";
 			echo "<td>".$item."</td>";
 			echo "<td>".$reg[0]."</td>";
-			echo "<td>".$top[0]."</td>";
+			echo "<td>".$tema."</td>";
+			echo "<td>".$cliente."</td>";
 			echo "<td>".$reg[2]."</td>";
 			echo "<td>".$reg[3]."</td>";
 			echo "<td>";

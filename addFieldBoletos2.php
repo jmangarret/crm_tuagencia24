@@ -8,18 +8,12 @@ require_once('vtlib/Vtiger/Block.php');
 require_once('vtlib/Vtiger/Field.php');
 $Vtiger_Utils_Log = true;
 $module=Vtiger_Module::getInstance('Boletos');
-$block = Vtiger_Block::getInstance('LBL_BLOCK_BOLETOS',$module);
 
-$field0=new Vtiger_Field();
-$field0->label='Pasaporte Verificado';
-$field0->name='pasaportecheck';
-$field0->table='vtiger_boletos';
-$field0->column='pasaportecheck';
-$field0->columntype = 'VARCHAR(2)';
-$field0->uitype = 56; //check
-$field0->typeofdata = 'V~O';
-$field0->defaultvalue = '0';
-$block->addField($field0);
+$block = new Vtiger_Block();					
+$block->label = 'LBL_PASAPORTE_INFORMATION';		
+$module->addBlock($block);	
+
+//$block = Vtiger_Block::getInstance('LBL_BLOCK_BOLETOS',$module);
 
 $field1=new Vtiger_Field();
 $field1->label='Pasaporte';
@@ -31,6 +25,18 @@ $field1->uitype = 69; //file
 $field1->typeofdata = 'V~M';
 $block->addField($field1);
 
+/*
+$field0=new Vtiger_Field();
+$field0->label='Pasaporte Verificado';
+$field0->name='pasaportecheck';
+$field0->table='vtiger_boletos';
+$field0->column='pasaportecheck';
+$field0->columntype = 'VARCHAR(2)';
+$field0->uitype = 56; //check
+$field0->typeofdata = 'V~O';
+$field0->defaultvalue = '0';
+$block->addField($field0);
+*/
 $field2=new Vtiger_Field();
 $field2->label='Observacion';
 $field2->name='observacion';

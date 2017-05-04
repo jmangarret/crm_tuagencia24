@@ -682,7 +682,7 @@ jQuery.Class("Vtiger_Detail_Js",{
 			var elem = jQuery(e.currentTarget);
 			var recordUrl = elem.data('recordurl');
 			/*jmangarret oct2016 - Se agrega condicion modulename para desactivar click en related localizadores*/
-			if(typeof recordUrl != "undefined" && app.getModuleName()!="Localizadores"){
+			if(typeof recordUrl != "undefined" && (app.getModuleName()!="Localizadores" || app.getModuleName()!="RegistroDeVentas")){
 				window.location.href = recordUrl;
 			}
 		});
