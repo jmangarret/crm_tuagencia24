@@ -26,7 +26,7 @@
 						<div class="pull-right detailViewButtoncontainer">
 							<div class="btn-toolbar">
 							<!-- jmangarret BOTON DE ACCION PROCESAR EN VISTA DETALLE DEL LOCALIZADOR, may2016 !-->				   
-							{if $MODULE eq 'Localizadores'}
+							{if $MODULE eq 'Localizadores' && $USER_MODEL->getParentRoleSequence()|count_characters<=18}
 							<span class="btn-group">
 									<a href="javascript:void(0);">
 									<button id="{$MODULE}_detail_basicAction_Process" class="btn addButton">
@@ -37,65 +37,43 @@
 							</span>
 							<script type="text/javascript">										 
 							 $(document).ready(function() {	
-						 		$('#{$MODULE}_detail_basicAction_Process').click(function(){						 			
-							        var ids1 	= new Array();						 
-							        var ids 	=$("#recordId").val();
-							        ids1.push(ids);									        
-						        	var ajax_data = {
-						        		'idloc' : ids, 
-						        		'accion' : 'valBoletosSoto'
-						        	};
-						        	jQuery.ajax({
-					        			data: ajax_data,
-										url: 'modules/Localizadores/ajax.php',
+						 		$('#{$MODULE}_detail_basicAction_Process').click(function(){
+						 		$("#{$MODULE}_detail_basicAction_Process").attr('disabled','disabled');
+						 		$("#{$MODULE}_detail_basicAction_Process").text("Procesando...");						 			
+							        var ids1 = new Array();						 
+							        var ids=$("#recordId").val();
+							        ids1.push(ids);						            
+							        
+						            var ajax_data1 = {
+						            "userid" : $("#current_user_id").val(),						
+									"accion" : "procesarLocalizadores",					
+									"id" : ids1					
+									};		
+									jQuery.ajax({
+										data: ajax_data1,
+										url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
 										type: 'get',
 										success: function(response){	
-											var ajax_data1 = {
-									            "userid" : $("#current_user_id").val(),						
-												"accion" : "procesarLocalizadores",					
-												"gds" 	: response,					
-												"id" : ids1					
-											};			
-											
-											if (response=="Localizador sin Boletos"){
-												bootbox.alert("El localizador no posee Boletos SOTO registrados.");
-												return false;
+											var idloc=$("#recordId").val();																								
+											if (response=="Completado"){
+												bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");										
+												setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); }, 3000);
 											}
-											if (response=="Boletos sin Pasaporte"){
-												bootbox.alert("Boletos SOTO sin pasaporte adjunto.");
-												return false;
+											if (response=="Incompleto"){
+												bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO asociado.");										
+												setTimeout(function(){ window.location.assign("index.php?module=Localizadores&view=List"); }, 3000);
 											}
-
-											jQuery.ajax({
-												data: ajax_data1,
-												url: 'modules/Localizadores/ajaxProcesarList_Loc.php',
-												type: 'get',
-												success: function(response2){	
-													var idloc=$("#recordId").val();															
-													if (response2=="Completado"){
-														bootbox.alert("Se han procesado TODOS LOS BOLETOS seleccionados.");								
-														setTimeout(function(){ 
-															window.location.assign("index.php?module=Localizadores&view=Detail&record="+idloc); 
-															},3000);
-													}
-													if (response2=="Incompleto"){
-														bootbox.alert("Algunos boletos NO se procesaron por FALTA DE CONTACTO.");	
-														setTimeout(function(){ 
-															window.location.assign("index.php?module=Localizadores&view=List"); 
-															},3000);
-													}
-													if (response2=="Fallido"){
-														bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
-													}													
-													if (response2=="Ya procesado"){
-														bootbox.alert("El localizador ya fue procesado, posee un registro de ventas asociado."); 											
-													}	
-												} 
-											});	
-										} 
-									});	
-								});	
-							});
+											if (response=="Fallido"){
+												bootbox.alert("No se procesó ningún localizador por falta de contactos."); 											
+											}	
+											if (response=="Ya procesado"){
+												bootbox.alert("El localizador ya fue procesado o posee un registro de ventas asociado."); 											
+											}	
+											$("#{$MODULE}_detail_basicAction_Process").text(response);											
+										}
+									});
+							    });	
+							});						
 							</script>
 							{/if}&nbsp;
 							<!-- FIN BOTON DE ACCION PROCESAR EN VISTA DETALLE DEL LOCALIZADOR, may2016 !-->				   

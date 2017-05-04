@@ -502,6 +502,8 @@ class Vtiger_Module_Model extends Vtiger_Module {
         switch($moduleName) {
             case 'HelpDesk': $this->nameFields = array('ticket_title');break;
             case 'Documents': $this->nameFields = array('notes_title');break;
+            case 'Faq': $this->nameFields = array('question');break;
+            case 'Vendors': $this->nameFields = array('vendorname');break;
         }
         return $this->nameFields;
 	}

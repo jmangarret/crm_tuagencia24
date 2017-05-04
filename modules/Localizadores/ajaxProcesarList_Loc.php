@@ -1,15 +1,13 @@
-<?
+<?php
 include("../../config.inc.php");
-include("../Boletos/BoletosFunciones.php");
 $user=$dbconfig['db_username'];
 $pass=$dbconfig['db_password'];
 $bd=$dbconfig['db_name'];
 mysql_connect("localhost",$user,$pass);
 mysql_select_db($bd);
-$id= 	$_GET["id"];
-$userid=$_GET["userid"];
-$accion=$_GET["accion"];
-$gds= 	$_GET["gds"];
+$id= $_GET["id"];
+$userid= $_GET["userid"];
+$accion= $_GET["accion"];
 $sin_contactos=0;
 $cont=0;
 if ($accion=="procesarLocalizadores"){		
@@ -17,7 +15,9 @@ if ($accion=="procesarLocalizadores"){
 	foreach ($id as $idLoc) {		
 		$resultado = mysql_query("SELECT registrodeventasid FROM vtiger_localizadores WHERE localizadoresid = ".$idLoc);
 		$registro = mysql_fetch_assoc($resultado);
-		if (!isset($registro["registrodeventasid"])){			
+		if (!isset($registro["registrodeventasid"]) OR is_null($registro["registrodeventasid"]) OR empty($registro["registrodeventasid"])){			
+			///FIX Error al procesar venta - Se coloca no procesado por no tener venta asociada
+			$qryUpdLoc=mysql_query("UPDATE vtiger_localizadores SET procesado=0 WHERE localizadoresid=".$idLoc);	
 			/// CREACION DEL REGISTO DE VENTAS ///
 			$sqlIdCrm=mysql_query("CALL getCrmId();");
 			$sqlIdCrm=mysql_query("SELECT @idcrm;");
@@ -56,15 +56,12 @@ if ($accion=="procesarLocalizadores"){
 				continue;
 			}
 
-			if ($gds=="Servi") 	$tipoVenta='Boleto SOTO';
-			else 				$tipoVenta='Boleto';
 			//Creamos registro de venta
 			$sqlVenta ="insert into vtiger_registrodeventas(registrodeventasid,registrodeventasname,registrodeventastype,fecha,contacto) ";
-			$sqlVenta.="values($crmId,'$moduleRecord','$tipoVenta',NULL,$contactid)";
+			$sqlVenta.="values($crmId,'$moduleRecord','Boleto',NULL,$contactid)";
 			$qryVenta=mysql_query($sqlVenta);
 			$insert_venta=mysql_affected_rows();
-
-			if ($insert_venta){
+			if ($insert_venta>0){
 				$sqlReg2="insert into vtiger_registrodeventascf(registrodeventasid,cf_1621,cf_1627) values($crmId,'Pendiente de Pago','Venta generada desde Procesar Localizadores')";
 				$qryReg2=mysql_query($sqlReg2);
 
@@ -81,41 +78,13 @@ if ($accion=="procesarLocalizadores"){
 					$qryVtaLoc=mysql_query("UPDATE vtiger_localizadores SET registrodeventasid=$crmId WHERE localizadoresid=".$idLoc);
 					//Insertamos relacion entre modulos vtiger
 					$qryInsertRel=mysql_query("INSERT INTO vtiger_crmentityrel values($crmId,'RegistroDeVentas',$idLoc,'Localizadores');");
-		
-					//jmangarret oct2016 - WORKFLOW SOTOS - Verificacion de Passport
-					if ($tipoVenta=="Boleto SOTO"){
-						$sql="SELECT localizador FROM vtiger_localizadores WHERE localizadoresid=$idloc";
-						$result = mysql_query($sql);	
-						$row = mysql_fetch_row($result);
-						$loc=$row[0];
-						$boletos=getCantBoletos($idloc);
-						if ($boletos>0){
-							$valPass=validarPasaportes($idloc);
-							if ($valPass==0 || !$valPass){
-								$email="tuagencia.sistemas01@gmail.com";
-								$asunto="SOTO CRM - Verificar Datos (Reserva de SOTO)";
-								$mensaje=getPlantillaVerificarDatos($idloc, $loc);					
-								$envio=enviarEmail($email,$asunto,$mensaje);	
-								if ($envio){
-									setStatusSoto($crmid,"Reservado");
-								}				
-							}else{
-								//Notificar falta de pasaporte adjunto
-								$email="tuagencia.sistemas01@gmail.com";
-								$asunto="SOTO CRM - Subir Pasaporte (Reservado de SOTO)";
-								$mensaje=getPlantillaSubirPasaporte($idloc, $loc);					
-								$envio=enviarEmail($email,$asunto,$mensaje);					
-							}	
-						}								
 
-					}
-					//fin
 					$cont++;						
 				}
 			}
 		}else{
 			$response="Ya procesado";	
-		}
+		}	
 	}
 	if (($cont>0) && ($sin_contactos==0)){//se procesaron todos
 		$response="Completado";
